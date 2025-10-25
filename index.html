@@ -486,12 +486,22 @@
                   <div id="mens-section" class="item-details" style="display: none;">
                     <label for="mens-color" class="color-label">What colour mens training shirt would you like?</label>
                     <select id="mens-color" class="color-select">
-                      <option value="">Select a colour option</option>
-                      <option value="navy-yellow">Navy/Yellow</option>
-                      <option value="white-black">White/Black</option>
-                      <option value="blue-red">Blue/Red</option>
-                    </select>
-                    <div id="mens-image" class="item-image-container" style="display: none;"></div>
+  <option value="">Select a colour option</option>
+  <option value="navy-yellow">Navy/Yellow</option>
+  <option value="white-black">White/Black</option>
+  <option value="blue-red">Blue/Red</option>
+</select>
+
+<label for="mens-masuri-color" class="color-label">What colour Masuri would you like?</label>
+<select id="mens-masuri-color" class="color-select">
+  <option value="">Select a Masuri colour</option>
+  <option value="yellow">Yellow</option>
+  <option value="navy">Navy</option>
+  <option value="white">White</option>
+  <option value="black">Black</option>
+</select>
+
+<div id="mens-image" class="item-image-container" style="display: none;"></div>
                   </div>
                 </div>
 
@@ -761,6 +771,13 @@
         'white-black': 'https://via.placeholder.com/400x500/FFFFFF/000000?text=White+Black+Shirt',
         'blue-red': 'https://via.placeholder.com/400x500/0074D9/FF4136?text=Blue+Red+Shirt'
       };
+
+      const masuriColorImages = {
+  'yellow': './assets/shirt-navy-yellow copy.jpg',
+  'navy': './assets/masuri-navy.jpg',
+  'white': './assets/masuri-white.jpg',
+  'black': './assets/masuri-black.jpg'
+};
 
       const playingColorImages = {
         'green': 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green+Shirt',
@@ -1087,6 +1104,7 @@
       function setupColorSelects() {
         const colorSelects = [
           { selectId: 'mens-color', imageId: 'mens-image', colorKey: 'mensColor', type: 'training' },
+          { selectId: 'mens-masuri-color', imageId: 'mens-image', colorKey: 'mensMasuriColor', type: 'masuri' },
           { selectId: 'womens-color', imageId: 'womens-image', colorKey: 'womensColor', type: 'training' },
           { selectId: 'junior-color', imageId: 'junior-image', colorKey: 'juniorColor', type: 'training' },
           { selectId: 'mens-playing-color', imageId: 'mens-playing-image', colorKey: 'mensPlayingColor', type: 'playing' },
@@ -1130,7 +1148,11 @@
           imageUrl = trainingColorImages[color];
           colorLabel = trainingColorLabels[color];
           itemLabel = 'Training Shirt';
-        } else if (type === 'playing') {
+        } else if (type === 'masuri') {
+  imageUrl = masuriColorImages[color];
+  colorLabel = color.charAt(0).toUpperCase() + color.slice(1);
+  itemLabel = 'Masuri Logo Colour';
+} else if (type === 'playing') {
           imageUrl = playingColorImages[color];
           colorLabel = playingColorLabels[color];
           itemLabel = 'Playing Shirt';
