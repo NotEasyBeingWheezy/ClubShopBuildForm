@@ -1,0 +1,283 @@
+<!-- Cricket Kit Order Form - BigCommerce Stencil Integration -->
+<div class="cricket-kit-form-container">
+  <div class="cricket-kit-form-wrapper">
+    <div class="cricket-kit-header">
+      <h1 class="cricket-kit-title">Cricket Kit Order Form</h1>
+      <p class="cricket-kit-subtitle">Select your training shirts and customize your team's kit</p>
+    </div>
+
+    <div class="cricket-kit-card">
+      <div class="cricket-kit-card-header">
+        <h2 class="cricket-kit-card-title">New Customer Order</h2>
+        <p class="cricket-kit-card-description">Choose your shirt types and preferred colours</p>
+      </div>
+
+      <div class="cricket-kit-card-content">
+        <!-- Training Kit Section -->
+        <div class="cricket-kit-section">
+          <h2 class="section-title">Training Kit</h2>
+
+          <!-- Training Shirts -->
+          <div class="item-group">
+            <div class="section-toggle-header">
+              <h3 class="section-toggle-title">Training Shirts</h3>
+              <input type="checkbox" id="training-section-toggle" class="cricket-checkbox">
+            </div>
+
+            <div id="training-shirts-section" class="section-content" style="display: none;">
+              <!-- Mens Training Shirts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="mens-toggle" class="item-toggle-label">Mens Training Shirts</label>
+                  <input type="checkbox" id="mens-toggle" class="cricket-checkbox">
+                </div>
+                <div id="mens-section" class="item-details" style="display: none;">
+                  <label for="mens-color" class="color-label">What colour mens training shirt would you like?</label>
+                  <select id="mens-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="navy-yellow">Navy/Yellow</option>
+                    <option value="white-black">White/Black</option>
+                    <option value="blue-red">Blue/Red</option>
+                  </select>
+                  <div id="mens-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Womens Training Shirts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="womens-toggle" class="item-toggle-label">Womens Training Shirts</label>
+                  <input type="checkbox" id="womens-toggle" class="cricket-checkbox">
+                </div>
+                <div id="womens-section" class="item-details" style="display: none;">
+                  <label for="womens-color" class="color-label">What colour womens training shirt would you like?</label>
+                  <select id="womens-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="navy-yellow">Navy/Yellow</option>
+                    <option value="white-black">White/Black</option>
+                    <option value="blue-red">Blue/Red</option>
+                  </select>
+                  <div id="womens-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Junior Training Shirts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="junior-toggle" class="item-toggle-label">Junior Training Shirts</label>
+                  <input type="checkbox" id="junior-toggle" class="cricket-checkbox">
+                </div>
+                <div id="junior-section" class="item-details" style="display: none;">
+                  <label for="junior-color" class="color-label">What colour junior training shirt would you like?</label>
+                  <select id="junior-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="navy-yellow">Navy/Yellow</option>
+                    <option value="white-black">White/Black</option>
+                    <option value="blue-red">Blue/Red</option>
+                  </select>
+                  <div id="junior-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Training Shorts -->
+          <div class="item-group">
+            <div class="section-toggle-header">
+              <h3 class="section-toggle-title">Training Shorts</h3>
+              <input type="checkbox" id="training-shorts-section-toggle" class="cricket-checkbox">
+            </div>
+
+            <div id="training-shorts-section" class="section-content" style="display: none;">
+              <!-- Mens Training Shorts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="mens-shorts-toggle" class="item-toggle-label">Mens Training Shorts</label>
+                  <input type="checkbox" id="mens-shorts-toggle" class="cricket-checkbox">
+                </div>
+                <div id="mens-shorts-section" class="item-details" style="display: none;">
+                  <label for="mens-shorts-color" class="color-label">What colour mens training shorts would you like?</label>
+                  <select id="mens-shorts-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="mens-shorts-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Womens Training Shorts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="womens-shorts-toggle" class="item-toggle-label">Womens Training Shorts</label>
+                  <input type="checkbox" id="womens-shorts-toggle" class="cricket-checkbox">
+                </div>
+                <div id="womens-shorts-section" class="item-details" style="display: none;">
+                  <label for="womens-shorts-color" class="color-label">What colour womens training shorts would you like?</label>
+                  <select id="womens-shorts-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="womens-shorts-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Junior Training Shorts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="junior-shorts-toggle" class="item-toggle-label">Junior Training Shorts</label>
+                  <input type="checkbox" id="junior-shorts-toggle" class="cricket-checkbox">
+                </div>
+                <div id="junior-shorts-section" class="item-details" style="display: none;">
+                  <label for="junior-shorts-color" class="color-label">What colour junior training shorts would you like?</label>
+                  <select id="junior-shorts-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="junior-shorts-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coloured Playing Kit Section -->
+        <div class="cricket-kit-section cricket-kit-section-border">
+          <h2 class="section-title">Coloured Playing Kit</h2>
+
+          <!-- Playing Shirts -->
+          <div class="item-group">
+            <div class="section-toggle-header">
+              <h3 class="section-toggle-title">Coloured Playing Shirts</h3>
+              <input type="checkbox" id="playing-section-toggle" class="cricket-checkbox">
+            </div>
+
+            <div id="playing-shirts-section" class="section-content" style="display: none;">
+              <!-- Mens Playing Shirts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="mens-playing-toggle" class="item-toggle-label">Mens Playing Shirts</label>
+                  <input type="checkbox" id="mens-playing-toggle" class="cricket-checkbox">
+                </div>
+                <div id="mens-playing-section" class="item-details" style="display: none;">
+                  <label for="mens-playing-color" class="color-label">What colour mens playing shirt would you like?</label>
+                  <select id="mens-playing-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="green">Green</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="mens-playing-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Womens Playing Shirts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="womens-playing-toggle" class="item-toggle-label">Womens Playing Shirts</label>
+                  <input type="checkbox" id="womens-playing-toggle" class="cricket-checkbox">
+                </div>
+                <div id="womens-playing-section" class="item-details" style="display: none;">
+                  <label for="womens-playing-color" class="color-label">What colour womens playing shirt would you like?</label>
+                  <select id="womens-playing-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="green">Green</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="womens-playing-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Junior Playing Shirts -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="junior-playing-toggle" class="item-toggle-label">Junior Playing Shirts</label>
+                  <input type="checkbox" id="junior-playing-toggle" class="cricket-checkbox">
+                </div>
+                <div id="junior-playing-section" class="item-details" style="display: none;">
+                  <label for="junior-playing-color" class="color-label">What colour junior playing shirt would you like?</label>
+                  <select id="junior-playing-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="green">Green</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="junior-playing-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Playing Trousers -->
+          <div class="item-group">
+            <div class="section-toggle-header">
+              <h3 class="section-toggle-title">Coloured Playing Trousers</h3>
+              <input type="checkbox" id="playing-trousers-section-toggle" class="cricket-checkbox">
+            </div>
+
+            <div id="playing-trousers-section" class="section-content" style="display: none;">
+              <!-- Mens Playing Trousers -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="mens-trousers-toggle" class="item-toggle-label">Mens Playing Trousers</label>
+                  <input type="checkbox" id="mens-trousers-toggle" class="cricket-checkbox">
+                </div>
+                <div id="mens-trousers-section" class="item-details" style="display: none;">
+                  <label for="mens-trousers-color" class="color-label">What colour mens playing trousers would you like?</label>
+                  <select id="mens-trousers-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="mens-trousers-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Womens Playing Trousers -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="womens-trousers-toggle" class="item-toggle-label">Womens Playing Trousers</label>
+                  <input type="checkbox" id="womens-trousers-toggle" class="cricket-checkbox">
+                </div>
+                <div id="womens-trousers-section" class="item-details" style="display: none;">
+                  <label for="womens-trousers-color" class="color-label">What colour womens playing trousers would you like?</label>
+                  <select id="womens-trousers-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="womens-trousers-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Junior Playing Trousers -->
+              <div class="item-section">
+                <div class="item-toggle-header">
+                  <label for="junior-trousers-toggle" class="item-toggle-label">Junior Playing Trousers</label>
+                  <input type="checkbox" id="junior-trousers-toggle" class="cricket-checkbox">
+                </div>
+                <div id="junior-trousers-section" class="item-details" style="display: none;">
+                  <label for="junior-trousers-color" class="color-label">What colour junior playing trousers would you like?</label>
+                  <select id="junior-trousers-color" class="color-select">
+                    <option value="">Select a colour option</option>
+                    <option value="black">Black</option>
+                    <option value="navy">Navy</option>
+                  </select>
+                  <div id="junior-trousers-image" class="item-image-container" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-message" class="success-message" style="display: none;">
+          <p>✓ Great choice! Your selections are being saved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
