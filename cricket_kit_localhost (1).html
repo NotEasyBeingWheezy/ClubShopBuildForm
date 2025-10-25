@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cricket Kit Order Form</title>
+  <style>
+    /* Cricket Kit Order Form - BigCommerce Stencil Styles */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    .cricket-kit-form-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+      padding: 3rem 1rem;
+    }
+
+    .cricket-kit-form-wrapper {
+      max-width: 768px;
+      margin: 0 auto;
+    }
+
+    .cricket-kit-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .cricket-kit-title {
+      margin-bottom: 0.75rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @media (min-width: 768px) {
+      .cricket-kit-title {
+        font-size: 3rem;
+      }
+    }
+
+    .cricket-kit-subtitle {
+      font-size: 1.125rem;
+      color: #6b7280;
+    }
+
+    .cricket-kit-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(229, 231, 235, 0.5);
+      border-radius: 0.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(12px);
+    }
+
+    .cricket-kit-card-header {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+      border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+      padding: 1.5rem;
+    }
+
+    .cricket-kit-card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111827;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .cricket-kit-card-description {
+      font-size: 1rem;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    .cricket-kit-card-content {
+      padding: 1.5rem;
+    }
+
+    .cricket-kit-section {
+      margin-bottom: 2rem;
+    }
+
+    .cricket-kit-section-border {
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 1.5rem;
+    }
+
+    .item-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-toggle-header,
+    .item-toggle-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      background: #ffffff;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .section-toggle-header:hover,
+    .item-toggle-header:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .section-toggle-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #111827;
+      margin: 0;
+    }
+
+    .item-toggle-label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #111827;
+      cursor: pointer;
+    }
+
+    .cricket-checkbox {
+      width: 1.25rem;
+      height: 1.25rem;
+      cursor: pointer;
+      accent-color: #2563eb;
+    }
+
+    .section-content {
+      margin-top: 1.5rem;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .item-section {
+      margin-bottom: 1rem;
+    }
+
+    .item-details {
+      margin-left: 1rem;
+      margin-top: 0.75rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .color-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #111827;
+      margin-bottom: 0.75rem;
+    }
+
+    .color-select {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      background: #ffffff;
+      color: #111827;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .color-select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .color-select:hover {
+      border-color: #d1d5db;
+    }
+
+    .item-image-container {
+      margin-top: 1rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .item-image-wrapper {
+      overflow: hidden;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .item-image {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      display: block;
+    }
+
+    .item-image-label {
+      padding: 0.75rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+      text-align: center;
+    }
+
+    .item-image-text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #111827;
+      margin: 0;
+    }
+
+    .success-message {
+      margin-top: 2rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .success-message p {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #111827;
+      margin: 0;
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .cricket-kit-form-container {
+        padding: 2rem 1rem;
+      }
+
+      .cricket-kit-title {
+        font-size: 2rem;
+      }
+
+      .cricket-kit-subtitle {
+        font-size: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Cricket Kit Order Form -->
+  <div class="cricket-kit-form-container">
+    <div class="cricket-kit-form-wrapper">
+      <div class="cricket-kit-header">
+        <h1 class="cricket-kit-title">Club Shop Order Form</Form></h1>
+        <p class="cricket-kit-subtitle">Select and customise your team's kit</p>
+      </div>
+
+      <div class="cricket-kit-card">
+        <div class="cricket-kit-card-header">
+          <h2 class="cricket-kit-card-title">New Customer Order</h2>
+          <p class="cricket-kit-card-description">Choose your shirt types and preferred colours</p>
+        </div>
+
+        <div class="cricket-kit-card-content">
+          <!-- Training Kit Section -->
+          <div class="cricket-kit-section">
+            <h2 class="section-title">Training Kit</h2>
+
+            <!-- Training Shirts -->
+            <div class="item-group">
+              <div class="section-toggle-header">
+                <h3 class="section-toggle-title">Training Shirts</h3>
+                <input type="checkbox" id="training-section-toggle" class="cricket-checkbox">
+              </div>
+
+              <div id="training-shirts-section" class="section-content" style="display: none;">
+                <!-- Mens Training Shirts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="mens-toggle" class="item-toggle-label">Mens Training Shirts</label>
+                    <input type="checkbox" id="mens-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="mens-section" class="item-details" style="display: none;">
+                    <label for="mens-color" class="color-label">What colour mens training shirt would you like?</label>
+                    <select id="mens-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="navy-yellow">Navy/Yellow</option>
+                      <option value="white-black">White/Black</option>
+                      <option value="blue-red">Blue/Red</option>
+                    </select>
+                    <div id="mens-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Womens Training Shirts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="womens-toggle" class="item-toggle-label">Womens Training Shirts</label>
+                    <input type="checkbox" id="womens-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="womens-section" class="item-details" style="display: none;">
+                    <label for="womens-color" class="color-label">What colour womens training shirt would you like?</label>
+                    <select id="womens-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="navy-yellow">Navy/Yellow</option>
+                      <option value="white-black">White/Black</option>
+                      <option value="blue-red">Blue/Red</option>
+                    </select>
+                    <div id="womens-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Junior Training Shirts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="junior-toggle" class="item-toggle-label">Junior Training Shirts</label>
+                    <input type="checkbox" id="junior-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="junior-section" class="item-details" style="display: none;">
+                    <label for="junior-color" class="color-label">What colour junior training shirt would you like?</label>
+                    <select id="junior-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="navy-yellow">Navy/Yellow</option>
+                      <option value="white-black">White/Black</option>
+                      <option value="blue-red">Blue/Red</option>
+                    </select>
+                    <div id="junior-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Training Shorts -->
+            <div class="item-group">
+              <div class="section-toggle-header">
+                <h3 class="section-toggle-title">Training Shorts</h3>
+                <input type="checkbox" id="training-shorts-section-toggle" class="cricket-checkbox">
+              </div>
+
+              <div id="training-shorts-section" class="section-content" style="display: none;">
+                <!-- Mens Training Shorts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="mens-shorts-toggle" class="item-toggle-label">Mens Training Shorts</label>
+                    <input type="checkbox" id="mens-shorts-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="mens-shorts-section" class="item-details" style="display: none;">
+                    <label for="mens-shorts-color" class="color-label">What colour mens training shorts would you like?</label>
+                    <select id="mens-shorts-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="mens-shorts-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Womens Training Shorts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="womens-shorts-toggle" class="item-toggle-label">Womens Training Shorts</label>
+                    <input type="checkbox" id="womens-shorts-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="womens-shorts-section" class="item-details" style="display: none;">
+                    <label for="womens-shorts-color" class="color-label">What colour womens training shorts would you like?</label>
+                    <select id="womens-shorts-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="womens-shorts-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Junior Training Shorts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="junior-shorts-toggle" class="item-toggle-label">Junior Training Shorts</label>
+                    <input type="checkbox" id="junior-shorts-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="junior-shorts-section" class="item-details" style="display: none;">
+                    <label for="junior-shorts-color" class="color-label">What colour junior training shorts would you like?</label>
+                    <select id="junior-shorts-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="junior-shorts-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coloured Playing Kit Section -->
+          <div class="cricket-kit-section cricket-kit-section-border">
+            <h2 class="section-title">Coloured Playing Kit</h2>
+
+            <!-- Playing Shirts -->
+            <div class="item-group">
+              <div class="section-toggle-header">
+                <h3 class="section-toggle-title">Coloured Playing Shirts</h3>
+                <input type="checkbox" id="playing-section-toggle" class="cricket-checkbox">
+              </div>
+
+              <div id="playing-shirts-section" class="section-content" style="display: none;">
+                <!-- Mens Playing Shirts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="mens-playing-toggle" class="item-toggle-label">Mens Playing Shirts</label>
+                    <input type="checkbox" id="mens-playing-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="mens-playing-section" class="item-details" style="display: none;">
+                    <label for="mens-playing-color" class="color-label">What colour mens playing shirt would you like?</label>
+                    <select id="mens-playing-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="green">Green</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="mens-playing-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Womens Playing Shirts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="womens-playing-toggle" class="item-toggle-label">Womens Playing Shirts</label>
+                    <input type="checkbox" id="womens-playing-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="womens-playing-section" class="item-details" style="display: none;">
+                    <label for="womens-playing-color" class="color-label">What colour womens playing shirt would you like?</label>
+                    <select id="womens-playing-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="green">Green</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="womens-playing-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Junior Playing Shirts -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="junior-playing-toggle" class="item-toggle-label">Junior Playing Shirts</label>
+                    <input type="checkbox" id="junior-playing-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="junior-playing-section" class="item-details" style="display: none;">
+                    <label for="junior-playing-color" class="color-label">What colour junior playing shirt would you like?</label>
+                    <select id="junior-playing-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="green">Green</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="junior-playing-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Playing Trousers -->
+            <div class="item-group">
+              <div class="section-toggle-header">
+                <h3 class="section-toggle-title">Coloured Playing Trousers</h3>
+                <input type="checkbox" id="playing-trousers-section-toggle" class="cricket-checkbox">
+              </div>
+
+              <div id="playing-trousers-section" class="section-content" style="display: none;">
+                <!-- Mens Playing Trousers -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="mens-trousers-toggle" class="item-toggle-label">Mens Playing Trousers</label>
+                    <input type="checkbox" id="mens-trousers-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="mens-trousers-section" class="item-details" style="display: none;">
+                    <label for="mens-trousers-color" class="color-label">What colour mens playing trousers would you like?</label>
+                    <select id="mens-trousers-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="mens-trousers-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Womens Playing Trousers -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="womens-trousers-toggle" class="item-toggle-label">Womens Playing Trousers</label>
+                    <input type="checkbox" id="womens-trousers-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="womens-trousers-section" class="item-details" style="display: none;">
+                    <label for="womens-trousers-color" class="color-label">What colour womens playing trousers would you like?</label>
+                    <select id="womens-trousers-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="womens-trousers-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+
+                <!-- Junior Playing Trousers -->
+                <div class="item-section">
+                  <div class="item-toggle-header">
+                    <label for="junior-trousers-toggle" class="item-toggle-label">Junior Playing Trousers</label>
+                    <input type="checkbox" id="junior-trousers-toggle" class="cricket-checkbox">
+                  </div>
+                  <div id="junior-trousers-section" class="item-details" style="display: none;">
+                    <label for="junior-trousers-color" class="color-label">What colour junior playing trousers would you like?</label>
+                    <select id="junior-trousers-color" class="color-select">
+                      <option value="">Select a colour option</option>
+                      <option value="black">Black</option>
+                      <option value="navy">Navy</option>
+                    </select>
+                    <div id="junior-trousers-image" class="item-image-container" style="display: none;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success Message -->
+          <div id="success-message" class="success-message" style="display: none;">
+            <p>✓ Great choice! Your selections are being saved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // NOTE: Update these paths to point to your actual image files
+      const IMAGE_BASE_PATH = 'https://via.placeholder.com/400x500/'; // PLACEHOLDER - Replace with your images
+      
+      const trainingColorImages = {
+        'navy-yellow': './assets/shirt-navy-yellow.jpg',
+        'white-black': 'https://via.placeholder.com/400x500/FFFFFF/000000?text=White+Black+Shirt',
+        'blue-red': 'https://via.placeholder.com/400x500/0074D9/FF4136?text=Blue+Red+Shirt'
+      };
+
+      const playingColorImages = {
+        'green': 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green+Shirt',
+        'black': 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black+Shirt',
+        'navy': 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shirt'
+      };
+
+      const shortsColorImages = {
+        'black': 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black+Shorts',
+        'navy': 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shorts'
+      };
+
+      const trousersColorImages = {
+        'black': 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black+Trousers',
+        'navy': 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Trousers'
+      };
+
+      const trainingColorLabels = {
+        'navy-yellow': 'Navy/Yellow',
+        'white-black': 'White/Black',
+        'blue-red': 'Blue/Red'
+      };
+
+      const playingColorLabels = {
+        'green': 'Green',
+        'black': 'Black',
+        'navy': 'Navy'
+      };
+
+      const shortsColorLabels = {
+        'black': 'Black',
+        'navy': 'Navy'
+      };
+
+      const trousersColorLabels = {
+        'black': 'Black',
+        'navy': 'Navy'
+      };
+
+      const formState = {
+        mens: false,
+        womens: false,
+        junior: false,
+        mensColor: '',
+        womensColor: '',
+        juniorColor: '',
+        mensPlaying: false,
+        womensPlaying: false,
+        juniorPlaying: false,
+        mensPlayingColor: '',
+        womensPlayingColor: '',
+        juniorPlayingColor: '',
+        mensShorts: false,
+        womensShorts: false,
+        juniorShorts: false,
+        mensShortsColor: '',
+        womensShortsColor: '',
+        juniorShortsColor: '',
+        mensTrousers: false,
+        womensTrousers: false,
+        juniorTrousers: false,
+        mensTrousersColor: '',
+        womensTrousersColor: '',
+        juniorTrousersColor: ''
+      };
+
+      function init() {
+        setupSectionToggles();
+        setupItemToggles();
+        setupColorSelects();
+      }
+
+      function setupSectionToggles() {
+        const sectionToggles = [
+          { toggleId: 'training-section-toggle', sectionId: 'training-shirts-section' },
+          { toggleId: 'training-shorts-section-toggle', sectionId: 'training-shorts-section' },
+          { toggleId: 'playing-section-toggle', sectionId: 'playing-shirts-section' },
+          { toggleId: 'playing-trousers-section-toggle', sectionId: 'playing-trousers-section' }
+        ];
+
+        sectionToggles.forEach(function(config) {
+          const toggle = document.getElementById(config.toggleId);
+          const section = document.getElementById(config.sectionId);
+          
+          if (toggle && section) {
+            toggle.addEventListener('change', function() {
+              section.style.display = this.checked ? 'block' : 'none';
+            });
+          }
+        });
+      }
+
+      function setupItemToggles() {
+        const itemToggles = [
+          { toggleId: 'mens-toggle', sectionId: 'mens-section', stateKey: 'mens', colorKey: 'mensColor' },
+          { toggleId: 'womens-toggle', sectionId: 'womens-section', stateKey: 'womens', colorKey: 'womensColor' },
+          { toggleId: 'junior-toggle', sectionId: 'junior-section', stateKey: 'junior', colorKey: 'juniorColor' },
+          { toggleId: 'mens-playing-toggle', sectionId: 'mens-playing-section', stateKey: 'mensPlaying', colorKey: 'mensPlayingColor' },
+          { toggleId: 'womens-playing-toggle', sectionId: 'womens-playing-section', stateKey: 'womensPlaying', colorKey: 'womensPlayingColor' },
+          { toggleId: 'junior-playing-toggle', sectionId: 'junior-playing-section', stateKey: 'juniorPlaying', colorKey: 'juniorPlayingColor' },
+          { toggleId: 'mens-shorts-toggle', sectionId: 'mens-shorts-section', stateKey: 'mensShorts', colorKey: 'mensShortsColor' },
+          { toggleId: 'womens-shorts-toggle', sectionId: 'womens-shorts-section', stateKey: 'womensShorts', colorKey: 'womensShortsColor' },
+          { toggleId: 'junior-shorts-toggle', sectionId: 'junior-shorts-section', stateKey: 'juniorShorts', colorKey: 'juniorShortsColor' },
+          { toggleId: 'mens-trousers-toggle', sectionId: 'mens-trousers-section', stateKey: 'mensTrousers', colorKey: 'mensTrousersColor' },
+          { toggleId: 'womens-trousers-toggle', sectionId: 'womens-trousers-section', stateKey: 'womensTrousers', colorKey: 'womensTrousersColor' },
+          { toggleId: 'junior-trousers-toggle', sectionId: 'junior-trousers-section', stateKey: 'juniorTrousers', colorKey: 'juniorTrousersColor' }
+        ];
+
+        itemToggles.forEach(function(config) {
+          const toggle = document.getElementById(config.toggleId);
+          const section = document.getElementById(config.sectionId);
+          
+          if (toggle && section) {
+            toggle.addEventListener('change', function() {
+              formState[config.stateKey] = this.checked;
+              section.style.display = this.checked ? 'block' : 'none';
+              
+              if (!this.checked) {
+                formState[config.colorKey] = '';
+                const imageContainer = document.getElementById(config.sectionId.replace('-section', '-image'));
+                if (imageContainer) {
+                  imageContainer.style.display = 'none';
+                  imageContainer.innerHTML = '';
+                }
+              }
+              
+              updateSuccessMessage();
+            });
+          }
+        });
+      }
+
+      function setupColorSelects() {
+        const colorSelects = [
+          { selectId: 'mens-color', imageId: 'mens-image', colorKey: 'mensColor', type: 'training' },
+          { selectId: 'womens-color', imageId: 'womens-image', colorKey: 'womensColor', type: 'training' },
+          { selectId: 'junior-color', imageId: 'junior-image', colorKey: 'juniorColor', type: 'training' },
+          { selectId: 'mens-playing-color', imageId: 'mens-playing-image', colorKey: 'mensPlayingColor', type: 'playing' },
+          { selectId: 'womens-playing-color', imageId: 'womens-playing-image', colorKey: 'womensPlayingColor', type: 'playing' },
+          { selectId: 'junior-playing-color', imageId: 'junior-playing-image', colorKey: 'juniorPlayingColor', type: 'playing' },
+          { selectId: 'mens-shorts-color', imageId: 'mens-shorts-image', colorKey: 'mensShortsColor', type: 'shorts' },
+          { selectId: 'womens-shorts-color', imageId: 'womens-shorts-image', colorKey: 'womensShortsColor', type: 'shorts' },
+          { selectId: 'junior-shorts-color', imageId: 'junior-shorts-image', colorKey: 'juniorShortsColor', type: 'shorts' },
+          { selectId: 'mens-trousers-color', imageId: 'mens-trousers-image', colorKey: 'mensTrousersColor', type: 'trousers' },
+          { selectId: 'womens-trousers-color', imageId: 'womens-trousers-image', colorKey: 'womensTrousersColor', type: 'trousers' },
+          { selectId: 'junior-trousers-color', imageId: 'junior-trousers-image', colorKey: 'juniorTrousersColor', type: 'trousers' }
+        ];
+
+        colorSelects.forEach(function(config) {
+          const select = document.getElementById(config.selectId);
+          const imageContainer = document.getElementById(config.imageId);
+          
+          if (select && imageContainer) {
+            select.addEventListener('change', function() {
+              const color = this.value;
+              formState[config.colorKey] = color;
+              
+              if (color) {
+                displayImage(imageContainer, color, config.type);
+              } else {
+                imageContainer.style.display = 'none';
+                imageContainer.innerHTML = '';
+              }
+              
+              updateSuccessMessage();
+            });
+          }
+        });
+      }
+
+      function displayImage(container, color, type) {
+        let imageUrl, colorLabel, itemLabel;
+        
+        if (type === 'training') {
+          imageUrl = trainingColorImages[color];
+          colorLabel = trainingColorLabels[color];
+          itemLabel = 'Training Shirt';
+        } else if (type === 'playing') {
+          imageUrl = playingColorImages[color];
+          colorLabel = playingColorLabels[color];
+          itemLabel = 'Playing Shirt';
+        } else if (type === 'shorts') {
+          imageUrl = shortsColorImages[color];
+          colorLabel = shortsColorLabels[color];
+          itemLabel = 'Training Shorts';
+        } else if (type === 'trousers') {
+          imageUrl = trousersColorImages[color];
+          colorLabel = trousersColorLabels[color];
+          itemLabel = 'Playing Trousers';
+        }
+
+        container.innerHTML = 
+          '<div class="item-image-wrapper">' +
+            '<img src="' + imageUrl + '" alt="' + colorLabel + ' cricket ' + itemLabel.toLowerCase() + '" class="item-image">' +
+            '<div class="item-image-label">' +
+              '<p class="item-image-text">' + colorLabel + ' ' + itemLabel + '</p>' +
+            '</div>' +
+          '</div>';
+        
+        container.style.display = 'block';
+      }
+
+      function updateSuccessMessage() {
+        const hasAnySelection = Object.keys(formState).some(function(key) {
+          if (key.includes('Color')) return false;
+          return formState[key] === true;
+        });
+
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+          successMessage.style.display = hasAnySelection ? 'block' : 'none';
+        }
+      }
+
+      function getFormData() {
+        return Object.assign({}, formState);
+      }
+
+      function resetForm() {
+        Object.keys(formState).forEach(function(key) {
+          if (key.includes('Color')) {
+            formState[key] = '';
+          } else {
+            formState[key] = false;
+          }
+        });
+
+        document.querySelectorAll('.cricket-checkbox').forEach(function(checkbox) {
+          checkbox.checked = false;
+        });
+
+        document.querySelectorAll('.color-select').forEach(function(select) {
+          select.value = '';
+        });
+
+        document.querySelectorAll('.section-content, .item-details').forEach(function(section) {
+          section.style.display = 'none';
+        });
+
+        document.querySelectorAll('.item-image-container').forEach(function(container) {
+          container.style.display = 'none';
+          container.innerHTML = '';
+        });
+
+        updateSuccessMessage();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+      window.CricketKitForm = {
+        getFormData: getFormData,
+        resetForm: resetForm,
+        formState: formState
+      };
+
+    })();
+  </script>
+</body>
+</html>
