@@ -25,13 +25,23 @@
     }
 
     .cricket-kit-form-wrapper {
-      max-width: 768px;
+      max-width: 1400px;
       margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .cricket-kit-form-wrapper {
+        grid-template-columns: 1fr 400px;
+      }
     }
 
     .cricket-kit-header {
       margin-bottom: 2rem;
       text-align: center;
+      grid-column: 1 / -1;
     }
 
     .cricket-kit-title {
@@ -239,6 +249,134 @@
       margin: 0;
     }
 
+    /* Form Input Styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .required {
+      color: #dc2626;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      background: #ffffff;
+      color: #111827;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-input:hover {
+      border-color: #d1d5db;
+    }
+
+    /* Order Summary Styles */
+    .order-summary-container {
+      position: relative;
+    }
+
+    @media (min-width: 1024px) {
+      .order-summary-container {
+        position: sticky;
+        top: 2rem;
+        align-self: start;
+      }
+    }
+
+    .order-summary-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(229, 231, 235, 0.5);
+      border-radius: 0.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(12px);
+    }
+
+    .order-summary-header {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+      border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+      padding: 1.5rem;
+    }
+
+    .order-summary-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #111827;
+      margin: 0;
+    }
+
+    .order-summary-content {
+      padding: 1.5rem;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+
+    .summary-section {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .summary-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-section-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .summary-item {
+      padding: 0.5rem 0;
+      font-size: 0.875rem;
+      color: #111827;
+    }
+
+    .summary-label {
+      font-weight: 500;
+      color: #6b7280;
+    }
+
+    .summary-value {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .summary-empty {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+
+    .summary-empty-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+
     /* Animations */
     @keyframes slideIn {
       from {
@@ -285,10 +423,11 @@
   <div class="cricket-kit-form-container">
     <div class="cricket-kit-form-wrapper">
       <div class="cricket-kit-header">
-        <h1 class="cricket-kit-title">Club Shop Order Form</Form></h1>
+        <h1 class="cricket-kit-title">Club Shop Order Form</h1>
         <p class="cricket-kit-subtitle">Select and customise your team's kit</p>
       </div>
 
+      <!-- Main Form -->
       <div class="cricket-kit-card">
         <div class="cricket-kit-card-header">
           <h2 class="cricket-kit-card-title">New Customer Order</h2>
@@ -296,8 +435,38 @@
         </div>
 
         <div class="cricket-kit-card-content">
-          <!-- Training Kit Section -->
+          <!-- Personal Information Section -->
           <div class="cricket-kit-section">
+            <h2 class="section-title">Personal Information</h2>
+            
+            <div class="form-group">
+              <label for="customer-name" class="form-label">Name <span class="required">*</span></label>
+              <input type="text" id="customer-name" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-role" class="form-label">Role <span class="required">*</span></label>
+              <input type="text" id="customer-role" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-email" class="form-label">Email <span class="required">*</span></label>
+              <input type="email" id="customer-email" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-home-phone" class="form-label">Home Phone</label>
+              <input type="tel" id="customer-home-phone" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label for="customer-mobile" class="form-label">Mobile <span class="required">*</span></label>
+              <input type="tel" id="customer-mobile" class="form-input" required>
+            </div>
+          </div>
+
+          <!-- Training Kit Section -->
+          <div class="cricket-kit-section cricket-kit-section-border">
             <h2 class="section-title">Training Kit</h2>
 
             <!-- Training Shirts -->
@@ -562,6 +731,21 @@
           </div>
         </div>
       </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="order-summary-container">
+        <div class="order-summary-card">
+          <div class="order-summary-header">
+            <h2 class="order-summary-title">Club Garment Summary</h2>
+          </div>
+          <div class="order-summary-content" id="order-summary-content">
+            <div class="summary-empty">
+              <div class="summary-empty-icon">📋</div>
+              <p>Start filling out the form to see your selections here</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -617,6 +801,11 @@
       };
 
       const formState = {
+        name: '',
+        role: '',
+        email: '',
+        homePhone: '',
+        mobile: '',
         mens: false,
         womens: false,
         junior: false,
@@ -644,9 +833,194 @@
       };
 
       function init() {
+        setupPersonalInfoInputs();
         setupSectionToggles();
         setupItemToggles();
         setupColorSelects();
+        updateOrderSummary();
+      }
+
+      function updateOrderSummary() {
+        const summaryContent = document.getElementById('order-summary-content');
+        if (!summaryContent) return;
+
+        let html = '';
+        let hasContent = false;
+
+        // Personal Information
+        if (formState.name || formState.role || formState.email || formState.homePhone || formState.mobile) {
+          hasContent = true;
+          html += '<div class="summary-section">';
+          html += '<div class="summary-section-title">Personal Information</div>';
+          
+          if (formState.name) {
+            html += '<div class="summary-item"><span class="summary-label">Name:</span> <span class="summary-value">' + formState.name + '</span></div>';
+          }
+          if (formState.role) {
+            html += '<div class="summary-item"><span class="summary-label">Role:</span> <span class="summary-value">' + formState.role + '</span></div>';
+          }
+          if (formState.email) {
+            html += '<div class="summary-item"><span class="summary-label">Email:</span> <span class="summary-value">' + formState.email + '</span></div>';
+          }
+          if (formState.homePhone) {
+            html += '<div class="summary-item"><span class="summary-label">Home Phone:</span> <span class="summary-value">' + formState.homePhone + '</span></div>';
+          }
+          if (formState.mobile) {
+            html += '<div class="summary-item"><span class="summary-label">Mobile:</span> <span class="summary-value">' + formState.mobile + '</span></div>';
+          }
+          
+          html += '</div>';
+        }
+
+        // Training Shirts
+        if (formState.mens || formState.womens || formState.junior) {
+          hasContent = true;
+          html += '<div class="summary-section">';
+          html += '<div class="summary-section-title">Training Shirts</div>';
+          
+          if (formState.mens) {
+            html += '<div class="summary-item">✓ Mens Training Shirts';
+            if (formState.mensColor) {
+              html += ' - <span class="summary-value">' + trainingColorLabels[formState.mensColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.womens) {
+            html += '<div class="summary-item">✓ Womens Training Shirts';
+            if (formState.womensColor) {
+              html += ' - <span class="summary-value">' + trainingColorLabels[formState.womensColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.junior) {
+            html += '<div class="summary-item">✓ Junior Training Shirts';
+            if (formState.juniorColor) {
+              html += ' - <span class="summary-value">' + trainingColorLabels[formState.juniorColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          
+          html += '</div>';
+        }
+
+        // Training Shorts
+        if (formState.mensShorts || formState.womensShorts || formState.juniorShorts) {
+          hasContent = true;
+          html += '<div class="summary-section">';
+          html += '<div class="summary-section-title">Training Shorts</div>';
+          
+          if (formState.mensShorts) {
+            html += '<div class="summary-item">✓ Mens Training Shorts';
+            if (formState.mensShortsColor) {
+              html += ' - <span class="summary-value">' + shortsColorLabels[formState.mensShortsColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.womensShorts) {
+            html += '<div class="summary-item">✓ Womens Training Shorts';
+            if (formState.womensShortsColor) {
+              html += ' - <span class="summary-value">' + shortsColorLabels[formState.womensShortsColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.juniorShorts) {
+            html += '<div class="summary-item">✓ Junior Training Shorts';
+            if (formState.juniorShortsColor) {
+              html += ' - <span class="summary-value">' + shortsColorLabels[formState.juniorShortsColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          
+          html += '</div>';
+        }
+
+        // Playing Shirts
+        if (formState.mensPlaying || formState.womensPlaying || formState.juniorPlaying) {
+          hasContent = true;
+          html += '<div class="summary-section">';
+          html += '<div class="summary-section-title">Coloured Playing Shirts</div>';
+          
+          if (formState.mensPlaying) {
+            html += '<div class="summary-item">✓ Mens Playing Shirts';
+            if (formState.mensPlayingColor) {
+              html += ' - <span class="summary-value">' + playingColorLabels[formState.mensPlayingColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.womensPlaying) {
+            html += '<div class="summary-item">✓ Womens Playing Shirts';
+            if (formState.womensPlayingColor) {
+              html += ' - <span class="summary-value">' + playingColorLabels[formState.womensPlayingColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.juniorPlaying) {
+            html += '<div class="summary-item">✓ Junior Playing Shirts';
+            if (formState.juniorPlayingColor) {
+              html += ' - <span class="summary-value">' + playingColorLabels[formState.juniorPlayingColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          
+          html += '</div>';
+        }
+
+        // Playing Trousers
+        if (formState.mensTrousers || formState.womensTrousers || formState.juniorTrousers) {
+          hasContent = true;
+          html += '<div class="summary-section">';
+          html += '<div class="summary-section-title">Coloured Playing Trousers</div>';
+          
+          if (formState.mensTrousers) {
+            html += '<div class="summary-item">✓ Mens Playing Trousers';
+            if (formState.mensTrousersColor) {
+              html += ' - <span class="summary-value">' + trousersColorLabels[formState.mensTrousersColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.womensTrousers) {
+            html += '<div class="summary-item">✓ Womens Playing Trousers';
+            if (formState.womensTrousersColor) {
+              html += ' - <span class="summary-value">' + trousersColorLabels[formState.womensTrousersColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          if (formState.juniorTrousers) {
+            html += '<div class="summary-item">✓ Junior Playing Trousers';
+            if (formState.juniorTrousersColor) {
+              html += ' - <span class="summary-value">' + trousersColorLabels[formState.juniorTrousersColor] + '</span>';
+            }
+            html += '</div>';
+          }
+          
+          html += '</div>';
+        }
+
+        if (!hasContent) {
+          html = '<div class="summary-empty"><div class="summary-empty-icon">📋</div><p>Start filling out the form to see your selections here</p></div>';
+        }
+
+        summaryContent.innerHTML = html;
+      }
+
+      function setupPersonalInfoInputs() {
+        const inputs = [
+          { id: 'customer-name', stateKey: 'name' },
+          { id: 'customer-role', stateKey: 'role' },
+          { id: 'customer-email', stateKey: 'email' },
+          { id: 'customer-home-phone', stateKey: 'homePhone' },
+          { id: 'customer-mobile', stateKey: 'mobile' }
+        ];
+
+        inputs.forEach(function(config) {
+          const input = document.getElementById(config.id);
+          if (input) {
+            input.addEventListener('input', function() {
+              formState[config.stateKey] = this.value;
+              updateOrderSummary();
+            });
+          }
+        });
       }
 
       function setupSectionToggles() {
@@ -704,6 +1078,7 @@
               }
               
               updateSuccessMessage();
+              updateOrderSummary();
             });
           }
         });
@@ -742,6 +1117,7 @@
               }
               
               updateSuccessMessage();
+              updateOrderSummary();
             });
           }
         });
@@ -812,6 +1188,10 @@
           select.value = '';
         });
 
+        document.querySelectorAll('.form-input').forEach(function(input) {
+          input.value = '';
+        });
+
         document.querySelectorAll('.section-content, .item-details').forEach(function(section) {
           section.style.display = 'none';
         });
@@ -822,6 +1202,7 @@
         });
 
         updateSuccessMessage();
+        updateOrderSummary();
       }
 
       if (document.readyState === 'loading') {
