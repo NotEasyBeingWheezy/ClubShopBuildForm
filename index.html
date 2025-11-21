@@ -127,6 +127,10 @@
       cursor: pointer;
     }
 
+    .item-toggle-header {
+      margin-left: 2rem;
+    }
+
     .section-toggle-header:hover,
     .item-toggle-header:hover {
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -464,13 +468,33 @@
       const CONFIG = {
         personalFields: [
           { id: 'clubName', label: 'Club Name', type: 'tel', required: true },
+          { id: 'clubWebsite', label: 'Club Website', tpye: 'text', required: true },
           { id: 'name', label: 'Name', type: 'text', required: true },
           { id: 'role', label: 'Role', type: 'text', required: true },
           { id: 'email', label: 'Email', type: 'email', required: true },
-          { id: 'mobile', label: 'Mobile', type: 'tel', required: true }
+          { id: 'phone', label: 'Phone', type: 'tel', required: true }
+
         ],
         
         kitSections: [
+          {
+            id: 'whites',
+            title: 'Playing Whites',
+            groups: [
+              {
+                id: 'whites-shirts',
+                title: 'Playing Shirts',
+                items: ['men\'s', 'women\'s', 'junior'],
+                colors: null
+              },
+              {
+                id: 'whites-trousers',
+                title: 'Playing Trousers',
+                items: ['men\'s', 'women\'s', 'junior'],
+                colors: null
+              }
+            ]
+          },
           {
             id: 'training',
             title: 'Training Kit',
@@ -557,9 +581,15 @@
                 items: ['men\'s', 'women\'s', 'junior'],
                 colors: {
                   options: [
-                    { value: 'green', label: 'Green', image: 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green' },
+                    { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green' },
                     { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
-                    { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy' }
+                    { value: 'red', label: 'Red', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
+                    { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
+                    { value: 'green', label: 'Green', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
+                    { value: 'yellow', label: 'Yellow', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
+                    { value: 'maroon', label: 'Maroon', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
+                    { value: 'royalBlue', label: 'Royal Blue', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
+                    { value: 'skyBlue', label: 'Sky Blue', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy' }
                   ]
                 }
               },
@@ -569,8 +599,8 @@
                 items: ['men\'s', 'women\'s', 'junior'],
                 colors: {
                   options: [
-                    { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black+Trousers' },
-                    { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Trousers' }
+                    { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green' },
+                    { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' }
                   ]
                 }
               }
@@ -640,6 +670,8 @@
           itemType = 'Training Shirt';
         } else if (lowerTitle.includes('coloured playing shirt')) {
           itemType = 'Coloured Playing Shirt';
+        } else if (lowerTitle.includes('playing shirt')) {
+          itemType = 'Playing Shirt';
         } else if (lowerTitle.includes('short')) {
           itemType = 'Shorts';
         } else if (lowerTitle.includes('trouser')) {
@@ -657,10 +689,10 @@
               <input type="checkbox" class="cricket-checkbox" data-item-toggle="${itemKey}">
             </div>
             <div class="item-details" data-item="${itemKey}">
-              ${renderColorSelect(itemKey, item, itemType, group.colors)}
+              ${group.colors ? renderColorSelect(itemKey, item, itemType, group.colors) : ''}
               ${hasAdditionalFields ? 
                 group.additionalFields[item].map(field => renderAdditionalField(itemKey, field)).join('') : ''}
-              <div class="item-image-container" data-image="${itemKey}" ${hasAdditionalFields ? `data-main-image="${itemKey}"` : ''}></div>
+              ${group.colors ? `<div class="item-image-container" data-image="${itemKey}" ${hasAdditionalFields ? `data-main-image="${itemKey}"` : ''}></div>` : ''}
             </div>
           </div>
         `;
@@ -850,7 +882,10 @@
             const selections = group.items.filter(item => formState[`${groupKey}-${item}`]).map(item => {
               const itemKey = `${groupKey}-${item}`;
               const color = formState[itemKey];
-              const colorLabel = color ? group.colors.options.find(o => o.value === color)?.label : '';
+              let colorLabel = '';
+              if (group.colors && color) {
+                colorLabel = group.colors.options.find(o => o.value === color)?.label || '';
+              }
               return `<div class="summary-item">✓ ${item.charAt(0).toUpperCase() + item.slice(1)} ${group.title}${colorLabel ? ` - <span class="summary-value">${colorLabel}</span>` : ''}</div>`;
             }).join('');
             
