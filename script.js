@@ -9,7 +9,25 @@
       { id: 'name', label: 'Name', type: 'text', required: true },
       { id: 'role', label: 'Role', type: 'text', required: true },
       { id: 'email', label: 'Email', type: 'email', required: true },
-      { id: 'phone', label: 'Phone', type: 'tel', required: true }
+      { id: 'phone', label: 'Phone', type: 'tel', required: true },
+      { 
+        id: 'salesperson', 
+        label: 'NX-Teamwear Salesperson', 
+        type: 'select', 
+        required: true,
+        options: [
+          { value: '', label: 'Select your salesperson' },
+          { value: 'James Kiening', label: 'James Kiening' },
+          { value: 'Adam Gunn', label: 'Adam Gunn' },
+          { value: 'Elliot Wright', label: 'Elliot Wright' },
+          { value: 'Ben Louch', label: 'Ben Louch' },
+          { value: 'Bob Bailey', label: 'Bob Bailey' },
+
+        ]
+      },
+      { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
+      { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true }
+      
     ],
     
     kitSections: [
@@ -475,7 +493,7 @@
           {
             id: 't-line-titanium',
             title: 'Masuri T Line Titanium',
-            items: ['senior', 'junior'],
+            items: ['senior'],
             colors: {
               options: [
                 { value: 'sky-blue', label: 'Sky Blue', image: './assets/shirt-navy-yellow.jpg' },
@@ -493,7 +511,7 @@
           {
             id: 'e-line-titanium',
             title: 'Masuri E Line Titanium',
-            items: ['senior', 'junior'],
+            items: ['senior'],
             colors: {
               options: [
                 { value: 'sky-blue', label: 'Sky Blue', image: './assets/shirt-navy-yellow.jpg' },
@@ -514,16 +532,165 @@
         title: 'Equipment',
         groups: [
           {
-            id: 'e-line-junior-batting-pads',
-            title: 'Masuri E Line Junior Batting Pads',
+            id: 'e-line-batting-pads',
+            title: 'Masuri E Line Batting Pads',
             items: ['senior', 'junior'],
+            colors: null
+          },
+          {
+            id: 't-line-batting-pads',
+            title: 'Masuri T Line Batting Pads',
+            items: ['senior'],
+            colors: null
+          },
+          {
+            id: 'c-line-batting-pads',
+            title: 'Masuri C Line Batting Pads',
+            items: ['senior'],
+            colors: null
+          },
+          {
+            id: 'e-line-thigh-pad-combo',
+            title: 'Masuri E Line Thigh Pad Combo',
+            items: ['senior'],
+            colors: null
+          },
+          {
+            id: 't-line-thigh-pad-combo',
+            title: 'Masuri T Line Thigh Pad Combo',
+            items: ['senior', 'junior'],
+            colors: null
+          },
+          {
+            id: 'e-line-batting-gloves',
+            title: 'Masuri E Line Batting Gloves',
+            items: ['senior', 'junior'],
+            colors: null
+          },
+          {
+            id: 'e-line-pro-batting-gloves',
+            title: 'Masuri E Line Pro Batting Gloves',
+            items: ['senior'],
+            colors: null
+          },
+          {
+            id: 't-line-batting-gloves',
+            title: 'Masuri T Line Batting Gloves',
+            items: ['senior'],
+            colors: null
+          },
+          {
+            id: 'c-line-batting-gloves',
+            title: 'Masuri C Line Batting Gloves',
+            items: ['senior'],
+            colors: null
+          },
+          {
+            id: 'e-line-duffle-bag',
+            title: 'Masuri E Line Duffle Bag',
+            items: [''],
+            colors: null
+          },
+          {
+            id: 'e-line-pro-wheel-bag',
+            title: 'Masuri E Line Pro Wheel Bag',
+            items: [''],
+            colors: null
+          },
+          {
+            id: 'stem-guard',
+            title: 'Masuri StemGuard',
+            items: ['senior', 'junior'],
+            colors: null
+          },
+
+        ]
+      },
+      { // Misc
+        id: 'misc',
+        title: 'Misc',
+        groups: [
+          {
+            id: 'mug',
+            title: 'Mug',
+            items: ['c'],
             colors: {
               options: [
+                { value: 'white', label: 'White', image: './assets/shirt-navy-yellow.jpg' },
               ]
             }
-          }
-        ]
-      } 
+          },
+          {
+            id: 'aluminium-water-bottle',
+            title: 'Aluminium Water Bottle with 2 Cap Styles',
+            items: [''],
+            colors: {
+              options: [
+                { value: 'white', label: 'White', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'silver', label: 'Silver', image: './assets/shirt-navy-yellow.jpg' }
+              ]
+            }
+          },
+          {
+            id: 'stainless-steel-water-bottle',
+            title: 'Stainless Steel Water Bottle ',
+            items: [''],
+            colors: {
+              options: [
+                { value: 'white', label: 'White', image: './assets/shirt-navy-yellow.jpg' }
+              ]
+            }
+          },
+          {
+            id: 'sliders',
+            title: 'Sliders',
+            items: [''],
+            colors: {
+              options: [
+                { value: 'white', label: 'White', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'black', label: 'Black', image: './assets/shirt-navy-yellow.jpg' }
+              ]
+            }
+          },
+          {
+            id: 'masuri-tech-training-sock',
+            title: 'Masuri Tech Training Sock',
+            items: [''],
+            colors: {
+              options: [
+                { value: 'white-navy', label: 'White/Navy', image: './assets/shirt-navy-yellow.jpg' },
+              ]
+            }
+          },
+          {
+            id: 'masuri-pro-wool-sock',
+            title: 'Masuri Pro Wool Sock',
+            items: [''],
+            colors: {
+              options: [
+                { value: 'white', label: 'White', image: './assets/shirt-navy-yellow.jpg' },
+              ]
+            }
+          },
+          {
+            id: 'masuri-mini-replica-helmet',
+            title: 'Masuri Mini Replica Helmet',
+            items: [''],
+            colors: {
+              options: [
+                { value: 'royal-blue', label: 'Royal Blue', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'sky-blue', label: 'Sky Blue', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'yellow', label: 'Yellow', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'red', label: 'Red', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'black', label: 'Black', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'maroon', label: 'Maroon', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'green', label: 'Green', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'navy', label: 'Navy', image: './assets/shirt-navy-yellow.jpg' }
+              ]
+            }
+          },
+        ] 
+      }
     ]
   };
 
@@ -538,18 +705,36 @@
   }
 
   // Render personal info fields
-  function renderPersonalInfo() {
+function renderPersonalInfo() {
     const container = document.getElementById('personal-info-fields');
-    container.innerHTML = CONFIG.personalFields.map(field => `
-      <div class="form-group">
-        <label for="${field.id}" class="form-label">
-          ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
-        </label>
-        <input type="${field.type}" id="${field.id}" class="form-input" ${field.required ? 'required' : ''} 
-               data-field="${field.id}">
-      </div>
-    `).join('');
+    container.innerHTML = CONFIG.personalFields.map(field => {
+      if (field.type === 'file') {
+        return `
+          <div class="form-group">
+            <label for="${field.id}" class="form-label">
+              ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
+            </label>
+            <input type="file" id="${field.id}" class="form-input" 
+                   ${field.required ? 'required' : ''} 
+                   ${field.accept ? `accept="${field.accept}"` : ''}
+                   ${field.multiple ? 'multiple' : ''}
+                   data-field="${field.id}" data-file-upload>
+            <div id="${field.id}-list" class="file-list"></div>
+          </div>
+        `;
+      }
+      return `
+        <div class="form-group">
+          <label for="${field.id}" class="form-label">
+            ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
+          </label>
+          <input type="${field.type}" id="${field.id}" class="form-input" ${field.required ? 'required' : ''} 
+                 data-field="${field.id}">
+        </div>
+      `;
+    }).join('');
   }
+
 
   // Render kit sections
   function renderKitSections() {
@@ -577,26 +762,30 @@
     `;
   }
 
+  function renderFileList(fieldId) {
+    const listContainer = document.getElementById(`${fieldId}-list`);
+    const files = formState[fieldId] || [];
+    
+    if (files.length === 0) {
+      listContainer.innerHTML = '';
+      return;
+    }
+    
+    listContainer.innerHTML = files.map(fileData => `
+      <div class="file-item">
+        <span class="file-name">${fileData.name}</span>
+        <button type="button" class="file-remove-btn" data-remove-file="${fieldId}" data-file-id="${fileData.id}">
+          Remove
+        </button>
+      </div>
+    `).join('');
+  }
+
   function renderItem(groupKey, item, group) {
     const itemKey = `${groupKey}-${item}`;
     const itemLabel = item.charAt(0).toUpperCase() + item.slice(1);
     
-    // Determine item type from group title
-    const lowerTitle = group.title.toLowerCase();
-    let itemType;
-    if (lowerTitle.includes('training shirt')) {
-      itemType = 'Training Shirt';
-    } else if (lowerTitle.includes('coloured playing shirt')) {
-      itemType = 'Coloured Playing Shirt';
-    } else if (lowerTitle.includes('playing shirt')) {
-      itemType = 'Playing Shirt';
-    } else if (lowerTitle.includes('short')) {
-      itemType = 'Shorts';
-    } else if (lowerTitle.includes('trouser')) {
-      itemType = 'Trousers';
-    } else {
-      itemType = 'Item';
-    }
+
     
     const hasAdditionalFields = group.additionalFields && group.additionalFields[item];
     
@@ -607,7 +796,7 @@
           <input type="checkbox" class="cricket-checkbox" data-item-toggle="${itemKey}">
         </div>
         <div class="item-details" data-item="${itemKey}">
-          ${group.colors ? renderColorSelect(itemKey, item, itemType, group.colors) : ''}
+          ${group.colors ? renderColorSelect(itemKey, item, group.title, group.colors) : ''}
           ${hasAdditionalFields ? 
             group.additionalFields[item].map(field => renderAdditionalField(itemKey, field)).join('') : ''}
           ${group.colors ? `<div class="item-image-container" data-image="${itemKey}" ${hasAdditionalFields ? `data-main-image="${itemKey}"` : ''}></div>` : ''}
@@ -616,16 +805,18 @@
     `;
   }
 
-  function renderColorSelect(itemKey, item, itemType, colorConfig) {
-    const itemLabel = item.charAt(0).toUpperCase() + item.slice(1);
-    return `
-      <label class="color-label">${itemLabel} ${itemType} Colour</label>
+function renderColorSelect(itemKey, item, title, colorConfig) {
+  const itemLabel = item.charAt(0).toUpperCase() + item.slice(1);
+  return `
+    <div class="color-field-container">
+      <label class="color-label">${itemLabel} ${title} Colour</label>
       <select class="color-select" data-color="${itemKey}">
         <option value="">Select a colour option</option>
         ${colorConfig.options.map(opt => `<option value="${opt.value}" data-image="${opt.image}">${opt.label}</option>`).join('')}
       </select>
-    `;
-  }
+    </div>
+  `;
+}
 
   function renderAdditionalField(itemKey, field) {
     const combinationData = field.imagesWithMasuri ? JSON.stringify(field.imagesWithMasuri).replace(/"/g, '&quot;') : '';
@@ -640,6 +831,32 @@
 
   // Event delegation
   function setupEventListeners() {
+        document.addEventListener('click', e => {
+      // Handle section toggle header clicks
+      if (e.target.closest('.section-toggle-header')) {
+        const header = e.target.closest('.section-toggle-header');
+        const checkbox = header.querySelector('[data-section-toggle]');
+        
+        // Don't toggle if they clicked directly on the checkbox
+        if (e.target !== checkbox) {
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+      
+      // Handle item toggle header clicks
+      if (e.target.closest('.item-toggle-header')) {
+        const header = e.target.closest('.item-toggle-header');
+        const checkbox = header.querySelector('[data-item-toggle]');
+        
+        // Don't toggle if they clicked directly on the checkbox
+        if (e.target !== checkbox) {
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+    });
+
     document.addEventListener('input', e => {
       if (e.target.matches('[data-field]')) {
         formState[e.target.dataset.field] = e.target.value;
@@ -648,9 +865,67 @@
     });
 
     document.addEventListener('change', e => {
+
+            // Handle file uploads
+      if (e.target.matches('[data-file-upload]')) {
+        const files = Array.from(e.target.files);
+        const fieldId = e.target.dataset.field;
+        
+        if (files.length > 0) {
+          // Initialize files array if it doesn't exist
+          if (!formState[fieldId]) {
+            formState[fieldId] = [];
+          }
+          
+          // Add new files to existing ones
+          files.forEach(file => {
+            const fileData = {
+              name: file.name,
+              size: file.size,
+              file: file,
+              id: Date.now() + Math.random() // unique ID for each file
+            };
+            formState[fieldId].push(fileData);
+          });
+          
+          // Render file list
+          renderFileList(fieldId);
+          updateOrderSummary();
+        }
+        
+        // Clear the input
+        e.target.value = '';
+      }
+
+
       if (e.target.matches('[data-section-toggle]')) {
         const section = document.querySelector(`[data-section="${e.target.dataset.sectionToggle}"]`);
         section.classList.toggle('active', e.target.checked);
+        
+        // If parent is deselected, deselect all children
+        if (!e.target.checked) {
+          const childToggles = section.querySelectorAll('[data-item-toggle]');
+          childToggles.forEach(toggle => {
+            if (toggle.checked) {
+              toggle.checked = false;
+              const item = document.querySelector(`[data-item="${toggle.dataset.itemToggle}"]`);
+              item.classList.remove('active');
+              formState[toggle.dataset.itemToggle] = false;
+              
+              // Clear color selections
+              const selects = item.querySelectorAll('[data-color]');
+              selects.forEach(sel => {
+                sel.value = '';
+                formState[sel.dataset.color] = '';
+              });
+              
+              // Hide images
+              const images = item.querySelectorAll('[data-image]');
+              images.forEach(img => img.classList.remove('active'));
+            }
+          });
+          updateOrderSummary();
+        }
       }
       
       if (e.target.matches('[data-item-toggle]')) {

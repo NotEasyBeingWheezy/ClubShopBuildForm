@@ -9,6 +9,39 @@ body {
   line-height: 1.5;
 }
 
+.file-preview {
+  margin-top: 1rem;
+}
+
+.file-preview-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  background: #f9fafb;
+}
+
+.file-preview-image {
+  max-width: 200px;
+  max-height: 200px;
+  width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.file-preview-name {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  word-break: break-all;
+}
+
+input[type="file"].form-input {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
 .cricket-kit-form-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
@@ -175,6 +208,10 @@ body {
   display: block;
 }
 
+.color-field-container {
+  margin-left: 1rem;
+}
+
 .color-label {
   display: block;
   font-size: 0.875rem;
@@ -216,6 +253,7 @@ body {
 }
 
 .item-image-wrapper {
+  margin-left: 1rem;
   overflow: hidden;
   border-radius: 0.5rem;
   border: 1px solid #e5e7eb;
