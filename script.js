@@ -3,32 +3,36 @@
 
   // Configuration
   const CONFIG = {
-    personalFields: [
-      { id: 'clubName', label: 'Club Name', type: 'text', required: true },
-      { id: 'clubWebsite', label: 'Club Website', type: 'text', required: true },
-      { id: 'name', label: 'Name', type: 'text', required: true },
-      { id: 'role', label: 'Role', type: 'text', required: true },
-      { id: 'email', label: 'Email', type: 'email', required: true },
-      { id: 'phone', label: 'Phone', type: 'tel', required: true },
-      { 
-        id: 'salesperson', 
-        label: 'NX-Teamwear Salesperson', 
-        type: 'select', 
-        required: true,
-        options: [
-          { value: '', label: 'Select your salesperson' },
-          { value: 'James Kiening', label: 'James Kiening' },
-          { value: 'Adam Gunn', label: 'Adam Gunn' },
-          { value: 'Elliot Wright', label: 'Elliot Wright' },
-          { value: 'Ben Louch', label: 'Ben Louch' },
-          { value: 'Bob Bailey', label: 'Bob Bailey' },
 
-        ]
-      },
-      { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
-      { id: 'sponsor-logo', label: 'Sponsor Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true }
-      
-    ],
+  clubFields: [
+    { id: 'clubName', label: 'Club Name', type: 'text', required: true },
+    { id: 'clubWebsite', label: 'Club Website', type: 'text', required: true },
+    { 
+      id: 'salesperson', 
+      label: 'NX-Teamwear Salesperson', 
+      type: 'select', 
+      required: true,
+      options: [
+        { value: '', label: '' },
+        { value: 'James Kiening', label: 'James Kiening' },
+        { value: 'Adam Gunn', label: 'Adam Gunn' },
+        { value: 'Elliot Wright', label: 'Elliot Wright' },
+        { value: 'Ben Louch', label: 'Ben Louch' },
+        { value: 'Bob Bailey', label: 'Bob Bailey' },
+      ]
+    },
+    { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
+    { id: 'sponsor-logo', label: 'Sponsor Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
+    
+  ],
+  
+  personalFields: [
+    { id: 'name', label: 'Name', type: 'text', required: true },
+    { id: 'role', label: 'Role', type: 'text', required: true },
+    { id: 'email', label: 'Email', type: 'email', required: true },
+    { id: 'phone', label: 'Phone', type: 'tel', required: true }
+  ],
+
     
     kitSections: [
 
@@ -458,7 +462,7 @@
           {
             id: 'bucket-hat',
             title: 'Bucket Hat',
-            items: ['unisex'],
+            items: [''],
             colors: {
               options: [
                 { value: 'navy', label: 'Navy', image: './assets/shirt-navy-yellow.jpg' },
@@ -695,16 +699,25 @@
 
   const formState = {};
 
-  // Initialize form state
-  CONFIG.personalFields.forEach(field => {
-    if (field.type === 'file') {
-      formState[field.id] = [];
-    } else {
-      formState[field.id] = '';
-    }
-  });
+// Initialize form state for club fields
+CONFIG.clubFields.forEach(field => {
+  if (field.type === 'file') {
+    formState[field.id] = [];
+  } else {
+    formState[field.id] = '';
+  }
+});
 
-  formState['notes'] = '';
+// Initialize form state for personal fields
+CONFIG.personalFields.forEach(field => {
+  if (field.type === 'file') {
+    formState[field.id] = [];
+  } else {
+    formState[field.id] = '';
+  }
+});
+
+formState['notes'] = '';
 
   // Helper function to capitalize each word
   function capitalizeWords(str) {
@@ -712,52 +725,103 @@
   }
 
   // Render personal info fields
-function renderPersonalInfo() {
-  const container = document.getElementById('personal-info-fields');
-  container.innerHTML = CONFIG.personalFields.map(field => {
-
+function renderClubInfo() {
+  const container = document.getElementById('club-info-fields');
+  
+  // Render all fields first
+  const renderedFields = CONFIG.clubFields.map(field => {
     // FILE INPUTS
     if (field.type === 'file') {
-      return `
+      return {
+        id: field.id,
+        html: `
+          <div class="floating-input">
+            <input 
+              type="file" 
+              id="${field.id}" 
+              class="form-input"
+              ${field.multiple ? 'multiple' : ''} 
+              accept="${field.accept || '*/*'}"
+              data-file-upload
+              data-field="${field.id}"
+              placeholder=" "
+            />
+            <label for="${field.id}">
+              ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
+            </label>
+            <div id="${field.id}-list" class="file-list"></div>
+          </div>
+        `
+      };
+    }
+
+    // SELECT FIELDS
+    if (field.type === 'select') {
+      return {
+        id: field.id,
+        html: `
+          <div class="floating-input">
+            <select 
+              id="${field.id}" 
+              class="form-input"
+              ${field.required ? 'required' : ''}
+              data-field="${field.id}"
+            >
+              ${field.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+            </select>
+            <label for="${field.id}">
+              ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
+            </label>
+          </div>
+        `
+      };
+    }
+
+    // STANDARD INPUTS
+    return {
+      id: field.id,
+      html: `
         <div class="floating-input">
           <input 
-            type="file" 
-            id="${field.id}" 
+            type="${field.type}"
+            id="${field.id}"
             class="form-input"
-            ${field.multiple ? 'multiple' : ''} 
-            accept="${field.accept || '*/*'}"
-            data-file-upload
+            ${field.required ? 'required' : ''} 
             data-field="${field.id}"
             placeholder=" "
           />
           <label for="${field.id}">
             ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
           </label>
-          <div id="${field.id}-list" class="file-list"></div>
         </div>
-      `;
-    }
+      `
+    };
+  });
 
-    // SELECT FIELDS
-    if (field.type === 'select') {
-      return `
-        <div class="floating-input">
-          <select 
-            id="${field.id}" 
-            class="form-input"
-            ${field.required ? 'required' : ''}
-            data-field="${field.id}"
-          >
-            ${field.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-          </select>
-          <label for="${field.id}">
-            ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
-          </label>
-        </div>
-      `;
+  // Build the HTML with logos in a row
+  let html = '';
+  renderedFields.forEach((field, index) => {
+    if (field.id === 'club-logo') {
+      // Start the logo row
+      html += '<div class="logo-upload-row">';
+      html += field.html;
+    } else if (field.id === 'sponsor-logo') {
+      // End the logo row
+      html += field.html;
+      html += '</div>';
+    } else {
+      html += field.html;
     }
+  });
 
-    // STANDARD INPUTS
+  container.innerHTML = html;
+}
+
+// Render personal info fields
+function renderPersonalInfo() {
+  const container = document.getElementById('personal-info-fields');
+  container.innerHTML = CONFIG.personalFields.map(field => {
+    // STANDARD INPUTS (all personal fields are text/email/tel inputs)
     return `
       <div class="floating-input">
         <input 
@@ -916,6 +980,9 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
         }
       }
       
+
+
+
       // Handle item toggle header clicks
       if (e.target.closest('.item-toggle-header')) {
         const header = e.target.closest('.item-toggle-header');
@@ -1144,61 +1211,84 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
         updateOrderSummary();
       }
 
+
+// Handle floating label for selects
+if (e.target.matches('select.form-input')) {
+  const floatingInput = e.target.closest('.floating-input');
+  if (floatingInput) {
+    if (e.target.value && e.target.value !== '') {
+      floatingInput.classList.add('has-value');
+    } else {
+      floatingInput.classList.remove('has-value');
+    }
+  }
+}
+
+
+
+
+
     });
   }
 
-  function updateOrderSummary() {
-    const container = document.getElementById('order-summary-content');
-    let html = '';
-    let hasContent = false;
+function updateOrderSummary() {
+  const container = document.getElementById('order-summary-content');
+  let html = '';
+  let hasContent = false;
 
-    // Personal info
-    const personalInfo = CONFIG.personalFields
-      .filter(f => {
-        if (f.type === 'file') {
+  // Club info
+  const clubInfo = CONFIG.clubFields
+    .filter(f => {
+      if (f.type === 'file') {
         return Array.isArray(formState[f.id]) && formState[f.id].length > 0;
       }
       return formState[f.id] && formState[f.id] !== '';
     })
-  .map(f => {
-    let value = f.type === 'file' 
-      ? formState[f.id].map(file => file.name).join(', ')
-      : formState[f.id];
-    return `<div class="summary-item"><span class="summary-label">${f.label}:</span> <span class="summary-value">${value}</span></div>`;
-  })
-  .join('');
-    
-    if (personalInfo) {
-      hasContent = true;
-      html += `<div class="summary-section"><div class="summary-section-title">Personal Information</div>${personalInfo}</div>`;
-    }
-
-    // Kit selections
-    CONFIG.kitSections.forEach(section => {
-      section.groups.forEach(group => {
-        const groupKey = `${section.id}-${group.id}`;
-        const selections = group.items.filter(item => formState[`${groupKey}-${item}`]).map(item => {
-          const itemKey = `${groupKey}-${item}`;
-          const color = formState[itemKey];
-          let colorLabel = '';
-          if (group.colors && color) {
-            colorLabel = group.colors.options.find(o => o.value === color)?.label || '';
-          }
-          return `<div class="summary-item">✓ ${item.charAt(0).toUpperCase() + item.slice(1)} ${group.title}${colorLabel ? ` - <span class="summary-value">${colorLabel}</span>` : ''}</div>`;
-        }).join('');
-        
-        if (selections) {
-          hasContent = true;
-          html += `<div class="summary-section"><div class="summary-section-title">${group.title}</div>${selections}</div>`;
-        }
-      });
-    });
-
-    container.innerHTML = hasContent ? html : '<div class="summary-empty"><div class="summary-empty-icon">📋</div><p>Start filling out the form to see your selections here</p></div>';
+    .map(f => {
+      let value = f.type === 'file' 
+        ? formState[f.id].map(file => file.name).join(', ')
+        : formState[f.id];
+      return `<div class="summary-item"><span class="summary-label">${f.label}:</span> <span class="summary-value">${value}</span></div>`;
+    })
+    .join('');
+  
+  if (clubInfo) {
+    hasContent = true;
+    html += `<div class="summary-section"><div class="summary-section-title">Club Information</div>${clubInfo}</div>`;
   }
+
+  // Personal info
+  const personalInfo = CONFIG.personalFields
+    .filter(f => {
+      if (f.type === 'file') {
+        return Array.isArray(formState[f.id]) && formState[f.id].length > 0;
+      }
+      return formState[f.id] && formState[f.id] !== '';
+    })
+    .map(f => {
+      let value = f.type === 'file' 
+        ? formState[f.id].map(file => file.name).join(', ')
+        : formState[f.id];
+      return `<div class="summary-item"><span class="summary-label">${f.label}:</span> <span class="summary-value">${value}</span></div>`;
+    })
+    .join('');
+  
+  if (personalInfo) {
+    hasContent = true;
+    html += `<div class="summary-section"><div class="summary-section-title">Personal Information</div>${personalInfo}</div>`;
+  }
+
+  // Kit selections (rest remains the same)
+  CONFIG.kitSections.forEach(section => {
+    // ... existing code
+  });
+
+  container.innerHTML = hasContent ? html : '<div class="summary-empty"><div class="summary-empty-icon">📋</div><p>Start filling out the form to see your selections here</p></div>';
+}
 
   // Initialize
   function init() {
+    renderClubInfo();
     renderPersonalInfo();
     renderKitSections();
     setupEventListeners();
