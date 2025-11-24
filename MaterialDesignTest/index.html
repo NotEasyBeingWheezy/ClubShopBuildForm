@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Floating label input — works</title>
+<style>
+  /* Container */
+  .floating-input {
+    position: relative;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    margin: 18px 0;
+    width: 320px; /* change as needed */
+  }
+
+  /* The actual input */
+  .floating-input input,
+  .floating-input textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 14px 12px;
+    padding-top: 20px; /* leaves room for label inside */
+    font-size: 16px;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    background: #fff;
+    outline: none;
+    transition: border-color .18s ease, box-shadow .18s ease;
+  }
+
+  .floating-input input:focus,
+  .floating-input textarea:focus {
+    border-color: #6b9cff;
+    box-shadow: 0 0 0 4px rgba(107,156,255,0.08);
+  }
+
+  /* The label that "floats" */
+  .floating-input label {
+    position: absolute;
+    left: 12px;
+    top: 14px;
+    transform-origin: left top;
+    background: white;
+    padding: 0 6px;
+    pointer-events: none;
+    color: #6b6b6b;
+    font-size: 16px;
+    transition: transform .18s ease, top .18s ease, font-size .18s ease, color .18s ease;
+    /* slightly higher z so it sits above the input border */
+    z-index: 2;
+  }
+
+  /* Active/small state: when input focused OR has value */
+  /* CSS-only (works where :placeholder-shown is supported) */
+  .floating-input input:focus + label,
+  .floating-input textarea:focus + label,
+  .floating-input input:not(:placeholder-shown) + label,
+  .floating-input textarea:not(:placeholder-shown) + label
+  {
+    top: -8px;
+    transform: translateY(0) scale(0.88);
+    font-size: 13px;
+    color: #283049;
+  }
+
+  /* JS fallback class if :placeholder-shown isn't reliable */
+  .floating-input.filled label {
+    top: -8px;
+    transform: translateY(0) scale(0.88);
+    font-size: 13px;
+    color: #283049;
+  }
+
+  /* small nicety for accessibility focus on label (if clicked) */
+  .floating-input label[for] {
+    cursor: text;
+  }
+
+  /* Optional: smaller input variant for compact forms */
+  .floating-input.small input {
+    padding: 10px 8px;
+    padding-top: 18px;
+    font-size: 14px;
+  }
+  .floating-input.small label {
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Example inputs -->
+<form style="padding:20px;">
+  <div class="floating-input">
+    <!-- placeholder must be present (can be a single space) for :placeholder-shown to work -->
+    <input id="name" name="name" type="text" placeholder=" " autocomplete="name" />
+    <label for="name">Full name</label>
+  </div>
+
+  <div class="floating-input">
+    <input id="email" name="email" type="email" placeholder=" " autocomplete="email" />
+    <label for="email">Email address</label>
+  </div>
+
+  <div class="floating-input">
+    <textarea id="notes" name="notes" rows="3" placeholder=" "></textarea>
+    <label for="notes">Notes</label>
+  </div>
+</form>
+
+<script>
+/*
+  Tiny JS fallback that:
+  - Adds class "filled" to .floating-input when the input/textarea has a non-empty value,
+    so the label stays floated even if the browser doesn't handle :placeholder-shown
+  - Runs on page load (for prefilled values) and on input/blur events
+*/
+(function () {
+  const groups = Array.from(document.querySelectorAll('.floating-input'));
+
+  function updateGroup(group) {
+    const input = group.querySelector('input, textarea');
+    if (!input) return;
+    // consider whitespace-only as empty
+    const hasValue = input.value && input.value.trim().length > 0;
+    if (hasValue) group.classList.add('filled');
+    else group.classList.remove('filled');
+  }
+
+  // Set listeners
+  groups.forEach(group => {
+    const input = group.querySelector('input, textarea');
+    if (!input) return;
+
+    // on every input, check if it has content
+    input.addEventListener('input', () => updateGroup(group));
+
+    // also on blur in case browser autofill/autocomplete changes value after focus
+    input.addEventListener('blur', () => updateGroup(group));
+
+    // On page load set initial state
+    updateGroup(group);
+  });
+
+  // If the page may be autofilled by browser after load, run again after a short delay
+  window.addEventListener('load', () => {
+    setTimeout(() => groups.forEach(updateGroup), 200);
+  });
+})();
+</script>
+
+</body>
+</html>
