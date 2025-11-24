@@ -37,10 +37,10 @@
   /* The label that "floats" */
   .floating-input label {
     position: absolute;
-    left: 12px;
+    left: 8px;
     top: 14px;
     transform-origin: left top;
-    background: white;
+    background-color: transparent;
     padding: 0 6px;
     pointer-events: none;
     color: #6b6b6b;
@@ -57,7 +57,7 @@
   .floating-input input:not(:placeholder-shown) + label,
   .floating-input textarea:not(:placeholder-shown) + label
   {
-    top: -8px;
+    top: 5px;
     transform: translateY(0) scale(0.88);
     font-size: 13px;
     color: #283049;

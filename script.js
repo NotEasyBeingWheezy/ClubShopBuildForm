@@ -26,7 +26,7 @@
         ]
       },
       { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
-      { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true }
+      { id: 'sponsor-logo', label: 'Sponsor Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true }
       
     ],
     
@@ -352,7 +352,7 @@
           {
             id: 'boot-bag',
             title: 'Boot Bag',
-            items: ['unisex'],
+            items: [''],
             colors: {
               options: [
                 { value: 'navy', label: 'Navy', image: './assets/shirt-navy-yellow.jpg' },
@@ -363,7 +363,7 @@
           {
             id: 'rucksack',
             title: 'Rucksack',
-            items: ['unisex'],
+            items: [''],
             colors: {
               options: [
                 { value: 'navy', label: 'Navy', image: './assets/shirt-navy-yellow.jpg' },
@@ -374,7 +374,7 @@
           {
             id: 'holdall',
             title: 'Holdall',
-            items: ['unisex'],
+            items: [''],
             colors: {
               options: [
                 { value: 'navy', label: 'Navy', image: './assets/shirt-navy-yellow.jpg' },
@@ -462,8 +462,7 @@
             colors: {
               options: [
                 { value: 'navy', label: 'Navy', image: './assets/shirt-navy-yellow.jpg' },
-                { value: 'black', label: 'Black', image: './assets/shirt-navy-yellow.jpg' },
-                { value: 'midnight-camo', label: 'Midnight Camo', image: './assets/shirt-navy-yellow.jpg' }
+                { value: 'black', label: 'Black', image: './assets/shirt-navy-yellow.jpg' }
               ]
             }
           }
@@ -613,7 +612,7 @@
           {
             id: 'mug',
             title: 'Mug',
-            items: ['c'],
+            items: [''],
             colors: {
               options: [
                 { value: 'white', label: 'White', image: './assets/shirt-navy-yellow.jpg' },
@@ -697,7 +696,15 @@
   const formState = {};
 
   // Initialize form state
-  CONFIG.personalFields.forEach(field => formState[field.id] = '');
+  CONFIG.personalFields.forEach(field => {
+    if (field.type === 'file') {
+      formState[field.id] = [];
+    } else {
+      formState[field.id] = '';
+    }
+  });
+
+  formState['notes'] = '';
 
   // Helper function to capitalize each word
   function capitalizeWords(str) {
@@ -706,23 +713,31 @@
 
   // Render personal info fields
 function renderPersonalInfo() {
-    const container = document.getElementById('personal-info-fields');
-    container.innerHTML = CONFIG.personalFields.map(field => {
-      if (field.type === 'file') {
-        return `
-          <div class="form-group">
-            <label for="${field.id}" class="form-label">
-              ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
-            </label>
-            <input type="file" id="${field.id}" class="form-input" 
-                   ${field.required ? 'required' : ''} 
-                   ${field.accept ? `accept="${field.accept}"` : ''}
-                   ${field.multiple ? 'multiple' : ''}
-                   data-field="${field.id}" data-file-upload>
-            <div id="${field.id}-list" class="file-list"></div>
-          </div>
-        `;
-      }
+  const container = document.getElementById('personal-info-fields');
+  container.innerHTML = CONFIG.personalFields.map(field => {
+    if (field.type === 'file') {
+      return `
+        <div class="form-group">
+          <label for="${field.id}" class="form-label">
+            ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
+          </label>
+          <input type="file" id="${field.id}" class="form-input" ${field.multiple ? 'multiple' : ''} 
+                 accept="${field.accept || '*/*'}" data-file-upload data-field="${field.id}">
+          <div id="${field.id}-list" class="file-list"></div>
+        </div>
+      `;
+    } else if (field.type === 'select') {
+      return `
+        <div class="form-group">
+          <label for="${field.id}" class="form-label">
+            ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
+          </label>
+          <select id="${field.id}" class="form-input" ${field.required ? 'required' : ''} data-field="${field.id}">
+            ${field.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+          </select>
+        </div>
+      `;
+    } else {
       return `
         <div class="form-group">
           <label for="${field.id}" class="form-label">
@@ -732,8 +747,10 @@ function renderPersonalInfo() {
                  data-field="${field.id}">
         </div>
       `;
-    }).join('');
-  }
+    }
+  }).join('');
+}
+
 
 
   // Render kit sections
@@ -746,6 +763,22 @@ function renderPersonalInfo() {
       </div>
     `).join('');
   }
+
+  // Render notes section
+function renderNotesSection() {
+  const container = document.getElementById('kit-sections');
+  const notesHTML = `
+    <div class="cricket-kit-section cricket-kit-section-border">
+      <h2 class="section-title">Additional Notes</h2>
+      <div class="form-group">
+        <label for="customer-notes" class="form-label">Please add any additional information or special requirements:</label>
+        <textarea id="customer-notes" class="form-input" data-field="notes" rows="5" 
+                  placeholder="Add any additional notes here..."></textarea>
+      </div>
+    </div>
+  `;
+  container.insertAdjacentHTML('beforeend', notesHTML);
+}
 
   function renderGroup(sectionId, group) {
     const groupKey = `${sectionId}-${group.id}`;
@@ -781,35 +814,48 @@ function renderPersonalInfo() {
     `).join('');
   }
 
-  function renderItem(groupKey, item, group) {
-    const itemKey = `${groupKey}-${item}`;
-    const itemLabel = item.charAt(0).toUpperCase() + item.slice(1);
-    
-
-    
-    const hasAdditionalFields = group.additionalFields && group.additionalFields[item];
-    
+function renderItem(groupKey, item, group) {
+  const itemKey = `${groupKey}-${item}`;
+  const itemLabel = item.charAt(0).toUpperCase() + item.slice(1);
+  const hasAdditionalFields = group.additionalFields && group.additionalFields[item];
+  
+  // Check if item is empty string (no size variation)
+  const isNoSizeVariation = item === '';
+  
+  if (isNoSizeVariation) {
+    // Render without toggle, just the color dropdown
     return `
-      <div class="item-section">
-        <div class="item-toggle-header" data-toggle="${itemKey}">
-          <label class="item-toggle-label">${itemLabel} ${group.title}</label>
-          <input type="checkbox" class="cricket-checkbox" data-item-toggle="${itemKey}">
-        </div>
-        <div class="item-details" data-item="${itemKey}">
+      <div class="item-section active">
+        <div class="item-details active" data-item="${itemKey}">
           ${group.colors ? renderColorSelect(itemKey, item, group.title, group.colors) : ''}
-          ${hasAdditionalFields ? 
-            group.additionalFields[item].map(field => renderAdditionalField(itemKey, field)).join('') : ''}
-          ${group.colors ? `<div class="item-image-container" data-image="${itemKey}" ${hasAdditionalFields ? `data-main-image="${itemKey}"` : ''}></div>` : ''}
+          ${group.colors ? `<div class="item-image-container active" data-image="${itemKey}"></div>` : ''}
         </div>
       </div>
     `;
   }
+  
+  // Original render with toggle for items with size variations
+  return `
+    <div class="item-section">
+      <div class="item-toggle-header" data-toggle="${itemKey}">
+        <label class="item-toggle-label">${itemLabel} ${group.title}</label>
+        <input type="checkbox" class="cricket-checkbox" data-item-toggle="${itemKey}">
+      </div>
+      <div class="item-details" data-item="${itemKey}">
+        ${group.colors ? renderColorSelect(itemKey, item, group.title, group.colors) : ''}
+        ${hasAdditionalFields ? 
+          group.additionalFields[item].map(field => renderAdditionalField(itemKey, field)).join('') : ''}
+        ${group.colors ? `<div class="item-image-container" data-image="${itemKey}" ${hasAdditionalFields ? `data-main-image="${itemKey}"` : ''}></div>` : ''}
+      </div>
+    </div>
+  `;
+}
 
 function renderColorSelect(itemKey, item, title, colorConfig) {
-  const itemLabel = item.charAt(0).toUpperCase() + item.slice(1);
+  const itemLabel = item === '' ? '' : (item.charAt(0).toUpperCase() + item.slice(1) + ' ');
   return `
     <div class="color-field-container">
-      <label class="color-label">${itemLabel} ${title} Colour</label>
+      <label class="color-label">${itemLabel}${title} Colour</label>
       <select class="color-select" data-color="${itemKey}">
         <option value="">Select a colour option</option>
         ${colorConfig.options.map(opt => `<option value="${opt.value}" data-image="${opt.image}">${opt.label}</option>`).join('')}
@@ -857,8 +903,19 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
       }
     });
 
+    document.addEventListener('click', e => {
+      if (e.target.matches('[data-remove-file]')) {
+        const fieldId = e.target.dataset.removeFile;
+        const fileId = e.target.dataset.fileId;
+    
+        formState[fieldId] = formState[fieldId].filter(f => f.id != fileId);
+        renderFileList(fieldId);
+        updateOrderSummary();
+      }
+    });
+
     document.addEventListener('input', e => {
-      if (e.target.matches('[data-field]')) {
+      if (e.target.matches('[data-field]') && !e.target.matches('[data-file-upload]')) {
         formState[e.target.dataset.field] = e.target.value;
         updateOrderSummary();
       }
@@ -866,25 +923,29 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
 
     document.addEventListener('change', e => {
 
-            // Handle file uploads
+// Handle file uploads
       if (e.target.matches('[data-file-upload]')) {
         const files = Array.from(e.target.files);
         const fieldId = e.target.dataset.field;
         
         if (files.length > 0) {
           // Initialize files array if it doesn't exist
-          if (!formState[fieldId]) {
+          if (!Array.isArray(formState[fieldId])) {
             formState[fieldId] = [];
           }
           
           // Add new files to existing ones
           files.forEach(file => {
+            // Extract just the filename (remove any path)
+            const fileName = file.name.split('\\').pop().split('/').pop();
+            
             const fileData = {
-              name: file.name,
+              name: fileName,
               size: file.size,
               file: file,
-              id: Date.now() + Math.random() // unique ID for each file
+              id: Date.now() + Math.random()
             };
+            
             formState[fieldId].push(fileData);
           });
           
@@ -1050,6 +1111,13 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
         }
         updateOrderSummary();
       }
+
+                // Handle select changes
+      if (e.target.matches('select[data-field]')) {
+        formState[e.target.dataset.field] = e.target.value;
+        updateOrderSummary();
+      }
+
     });
   }
 
@@ -1059,9 +1127,20 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
     let hasContent = false;
 
     // Personal info
-    const personalInfo = CONFIG.personalFields.filter(f => formState[f.id]).map(f => 
-      `<div class="summary-item"><span class="summary-label">${f.label}:</span> <span class="summary-value">${formState[f.id]}</span></div>`
-    ).join('');
+    const personalInfo = CONFIG.personalFields
+      .filter(f => {
+        if (f.type === 'file') {
+        return Array.isArray(formState[f.id]) && formState[f.id].length > 0;
+      }
+      return formState[f.id] && formState[f.id] !== '';
+    })
+  .map(f => {
+    let value = f.type === 'file' 
+      ? formState[f.id].map(file => file.name).join(', ')
+      : formState[f.id];
+    return `<div class="summary-item"><span class="summary-label">${f.label}:</span> <span class="summary-value">${value}</span></div>`;
+  })
+  .join('');
     
     if (personalInfo) {
       hasContent = true;
@@ -1097,6 +1176,7 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
     renderPersonalInfo();
     renderKitSections();
     setupEventListeners();
+    renderNotesSection();
   }
 
   if (document.readyState === 'loading') {
