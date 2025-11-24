@@ -715,41 +715,67 @@
 function renderPersonalInfo() {
   const container = document.getElementById('personal-info-fields');
   container.innerHTML = CONFIG.personalFields.map(field => {
+
+    // FILE INPUTS
     if (field.type === 'file') {
       return `
-        <div class="form-group">
-          <label for="${field.id}" class="form-label">
+        <div class="floating-input">
+          <input 
+            type="file" 
+            id="${field.id}" 
+            class="form-input"
+            ${field.multiple ? 'multiple' : ''} 
+            accept="${field.accept || '*/*'}"
+            data-file-upload
+            data-field="${field.id}"
+            placeholder=" "
+          />
+          <label for="${field.id}">
             ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
           </label>
-          <input type="file" id="${field.id}" class="form-input" ${field.multiple ? 'multiple' : ''} 
-                 accept="${field.accept || '*/*'}" data-file-upload data-field="${field.id}">
           <div id="${field.id}-list" class="file-list"></div>
         </div>
       `;
-    } else if (field.type === 'select') {
+    }
+
+    // SELECT FIELDS
+    if (field.type === 'select') {
       return `
-        <div class="form-group">
-          <label for="${field.id}" class="form-label">
-            ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
-          </label>
-          <select id="${field.id}" class="form-input" ${field.required ? 'required' : ''} data-field="${field.id}">
+        <div class="floating-input">
+          <select 
+            id="${field.id}" 
+            class="form-input"
+            ${field.required ? 'required' : ''}
+            data-field="${field.id}"
+          >
             ${field.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
           </select>
-        </div>
-      `;
-    } else {
-      return `
-        <div class="form-group">
-          <label for="${field.id}" class="form-label">
+          <label for="${field.id}">
             ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
           </label>
-          <input type="${field.type}" id="${field.id}" class="form-input" ${field.required ? 'required' : ''} 
-                 data-field="${field.id}">
         </div>
       `;
     }
+
+    // STANDARD INPUTS
+    return `
+      <div class="floating-input">
+        <input 
+          type="${field.type}"
+          id="${field.id}"
+          class="form-input"
+          ${field.required ? 'required' : ''} 
+          data-field="${field.id}"
+          placeholder=" "
+        />
+        <label for="${field.id}">
+          ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
+        </label>
+      </div>
+    `;
   }).join('');
 }
+
 
 
 
