@@ -8,49 +8,52 @@
 </head>
 <body>
   <div class="cricket-kit-form-container">
-    <div class="cricket-kit-form-wrapper">
-      <div class="cricket-kit-header">
-        <h1 class="cricket-kit-title">Club Shop Build Form</h1>
-        <p class="cricket-kit-subtitle">Select and customise your team's kit</p>
+  <div class="cricket-kit-form-wrapper">
+    <div class="cricket-kit-header">
+      <h1 class="cricket-kit-title">Club Shop Build Form</h1>
+      <p class="cricket-kit-subtitle">Select and customise your team's kit</p>
+    </div>
+
+    <div class="cricket-kit-card">
+      <div class="cricket-kit-card-header">
+        <h2 class="cricket-kit-card-title">New Shop Build</h2>
+        <p class="cricket-kit-card-description">Choose your garments and preferred colours</p>
       </div>
 
-      <div class="cricket-kit-card">
-        <div class="cricket-kit-card-header">
-          <h2 class="cricket-kit-card-title">New Shop Build</h2>
-          <p class="cricket-kit-card-description">Choose your garments and preferred colours</p>
+      <div class="cricket-kit-card-content">
+        <!-- Club Information -->
+        <div class="cricket-kit-section">
+          <h2 class="section-title">Club Information</h2>
+          <div id="club-info-fields"></div>
         </div>
 
-        <div class="cricket-kit-card-content">
-          <!-- Personal Information -->
-          <div class="cricket-kit-section">
-            <h2 class="section-title">Personal Information</h2>
-            <div id="personal-info-fields"></div>
-          </div>
-
-          <!-- Dynamic Kit Sections -->
-          <div id="kit-sections"></div>
+        <!-- Personal Information -->
+        <div class="cricket-kit-section">
+          <h2 class="section-title">Personal Information</h2>
+          <div id="personal-info-fields"></div>
         </div>
+
+        <!-- Dynamic Kit Sections -->
+        <div id="kit-sections"></div>
       </div>
+    </div>
 
-
-
-
-      <!-- Order Summary -->
-      <div class="order-summary-container">
-        <div class="order-summary-card">
-          <div class="order-summary-header">
-            <h2 class="order-summary-title">Summary</h2>
-          </div>
-          <div class="order-summary-content" id="order-summary-content">
-            <div class="summary-empty">
-              <div class="summary-empty-icon">📋</div>
-              <p>Start filling out the form to see your selections here</p>
-            </div>
+    <!-- Order Summary - THIS SHOULD BE A SIBLING OF cricket-kit-card, NOT INSIDE IT -->
+    <div class="order-summary-container">
+      <div class="order-summary-card">
+        <div class="order-summary-header">
+          <h2 class="order-summary-title">Summary</h2>
+        </div>
+        <div class="order-summary-content" id="order-summary-content">
+          <div class="summary-empty">
+            <div class="summary-empty-icon">📋</div>
+            <p>Start filling out the form to see your selections here</p>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
   
 
