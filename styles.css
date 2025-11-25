@@ -496,6 +496,10 @@ input[type="file"].form-input {
   gap: 18px;
 }
 
+#personal-info-fields .floating-input {
+  margin: 0;
+}
+
 /* Make it stack on mobile */
 @media (max-width: 768px) {
   #personal-info-fields {
