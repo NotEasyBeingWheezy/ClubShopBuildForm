@@ -1147,6 +1147,12 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
       html += `<div class="summary-section"><div class="summary-section-title">Personal Information</div>${personalInfo}</div>`;
     }
 
+    // Notes
+    if (formState['notes'] && formState['notes'].trim() !== '') {
+      hasContent = true;
+      html += `<div class="summary-section"><div class="summary-section-title">Additional Notes</div><div class="summary-item"><span class="summary-value">${formState['notes']}</span></div></div>`;
+    }
+
     // Kit selections
     CONFIG.kitSections.forEach(section => {
       section.groups.forEach(group => {
