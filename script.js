@@ -1055,13 +1055,14 @@ function setupEventListeners() {
         
         // If parent is deselected, deselect all children
         if (!e.target.checked) {
+          // Clear child toggles (items with size variations)
           const childToggles = section.querySelectorAll('[data-item-toggle]');
           childToggles.forEach(toggle => {
             if (toggle.checked) {
               toggle.checked = false;
               const item = document.querySelector(`[data-item="${toggle.dataset.itemToggle}"]`);
               item.classList.remove('active');
-              formState[toggle.dataset.itemToggle] = false;
+              formState[toggle.dataset.itemToggle + '-toggle'] = false;
               
               // Clear color selections
               const selects = item.querySelectorAll('[data-color]');
@@ -1075,14 +1076,28 @@ function setupEventListeners() {
               images.forEach(img => img.classList.remove('active'));
             }
           });
-          updateOrderSummary();
+          
+          // Also clear color selections for no-size-variation items (those without toggles)
+          // These are in .item-section.active (always active) containers
+          const noSizeItems = section.querySelectorAll('.item-section.active [data-color]');
+          noSizeItems.forEach(sel => {
+            sel.value = '';
+            formState[sel.dataset.color] = '';
+          });
+          
+          // Hide images in no-size-variation items
+          const noSizeImages = section.querySelectorAll('.item-section.active [data-image]');
+          noSizeImages.forEach(img => img.classList.remove('active'));
         }
+        
+        // Always update summary when toggling section (both on and off)
+        updateOrderSummary();
       }
       
-      if (e.target.matches('[data-item-toggle]')) {
+if (e.target.matches('[data-item-toggle]')) {
         const item = document.querySelector(`[data-item="${e.target.dataset.itemToggle}"]`);
         item.classList.toggle('active', e.target.checked);
-        formState[e.target.dataset.itemToggle] = e.target.checked;
+        formState[e.target.dataset.itemToggle + '-toggle'] = e.target.checked;
         
         if (!e.target.checked) {
           const selects = item.querySelectorAll('[data-color]');
@@ -1274,6 +1289,11 @@ function updateOrderSummary() {
   CONFIG.kitSections.forEach(section => {
     section.groups.forEach(group => {
       const groupKey = `${section.id}-${group.id}`;
+      
+      // Check if the parent section is toggled on
+      const sectionToggle = document.querySelector(`[data-section-toggle="${groupKey}"]`);
+      const isSectionActive = sectionToggle ? sectionToggle.checked : false;
+      
       const selections = group.items.filter(item => {
         const itemKey = `${groupKey}-${item}`;
         const colorKey = itemKey; // Color is stored with same key
@@ -1281,16 +1301,17 @@ function updateOrderSummary() {
         // Check if this is a no-size-variation item (empty string)
         const isNoSizeVariation = item === '';
         
-        // For no-size-variation items, only check if color is selected
+        // For no-size-variation items, check section toggle AND color selection
         if (isNoSizeVariation) {
           if (group.colors) {
-            return formState[colorKey] && formState[colorKey] !== '';
+            return isSectionActive && formState[colorKey] && formState[colorKey] !== '';
           }
-          return false; // No color means nothing to show
+          // No colors means just check if section is active
+          return isSectionActive;
         }
         
         // For items with size variations, must be toggled on
-        const isToggled = formState[itemKey] === true;
+        const isToggled = formState[itemKey + '-toggle'] === true;
         
         // If group has colors, must have a color selected
         if (group.colors) {
@@ -1306,7 +1327,11 @@ function updateOrderSummary() {
         if (group.colors && color && typeof color === 'string') {
           colorLabel = group.colors.options.find(o => o.value === color)?.label || '';
         }
-        return `<div class="summary-item">✓ ${item.charAt(0).toUpperCase() + item.slice(1)} ${group.title}${colorLabel ? ` - <span class="summary-value">${colorLabel}</span>` : ''}</div>`;
+        
+        // For items with empty string (no size variation), just show the group title
+        const itemDisplay = item === '' ? group.title : `${item.charAt(0).toUpperCase() + item.slice(1)} ${group.title}`;
+        
+        return `<div class="summary-item">✓ ${itemDisplay}${colorLabel ? ` - <span class="summary-value">${colorLabel}</span>` : ''}</div>`;
       }).join('');
       
       if (selections) {
