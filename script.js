@@ -243,18 +243,6 @@
             }
           },
           {
-            id: 'polo',
-            title: 'Polo - Active Polo? - ask Benji',
-            items: ['men\'s', 'women\'s', 'junior'],
-            colors: {
-              options: [
-                { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black+Shorts' },
-                { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shorts' }
-                
-              ]
-            }
-          },
-          {
             id: 'performance-polo',
             title: 'Performance Polo',
             items: ['men\'s', 'women\'s', 'junior'],
@@ -288,15 +276,15 @@
               options: [
                 { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black+Shorts' },
                 { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shorts' },
-                { value: 'red', label: 'Red - ask Benji', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shorts' },
-                { value: 'royal-blue', label: 'Royal Blue - ask Benji', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shorts' }
+                { value: 'red', label: 'Red', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shorts' },
+                { value: 'royal-blue', label: 'Royal Blue', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy+Shorts' }
                 
               ]
             }
           },
           {
             id: 'gilet',
-            title: 'Gilet - ask Benji',
+            title: 'Gilet',
             items: ['unisex', 'junior'],
             colors: {
               options: [
@@ -1340,6 +1328,12 @@ function updateOrderSummary() {
       }
     });
   });
+
+  // Additional notes
+  if (formState['notes'] && formState['notes'].trim() !== '') {
+    hasContent = true;
+    html += `<div class="summary-section"><div class="summary-section-title">Additional Notes</div><div class="summary-item"><span class="summary-value">${formState['notes']}</span></div></div>`;
+  }
 
   container.innerHTML = hasContent ? html : '<div class="summary-empty"><div class="summary-empty-icon">📋</div><p>Start filling out the form to see your selections here</p></div>';
 }

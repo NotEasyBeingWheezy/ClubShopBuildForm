@@ -490,6 +490,19 @@ input[type="file"].form-input {
   border-color: #d1d5db;
 }
 
+#personal-info-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* Make it stack on mobile */
+@media (max-width: 768px) {
+  #personal-info-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
 .order-summary-container {
   position: relative;
 }
