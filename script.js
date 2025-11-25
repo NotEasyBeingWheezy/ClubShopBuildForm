@@ -1160,13 +1160,19 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
           }
           return `<div class="summary-item">✓ ${item.charAt(0).toUpperCase() + item.slice(1)} ${group.title}${colorLabel ? ` - <span class="summary-value">${colorLabel}</span>` : ''}</div>`;
         }).join('');
-        
+
         if (selections) {
           hasContent = true;
           html += `<div class="summary-section"><div class="summary-section-title">${group.title}</div>${selections}</div>`;
         }
       });
     });
+
+    // Additional notes
+    if (formState['notes'] && formState['notes'].trim() !== '') {
+      hasContent = true;
+      html += `<div class="summary-section"><div class="summary-section-title">Additional Notes</div><div class="summary-item"><span class="summary-value">${formState['notes']}</span></div></div>`;
+    }
 
     container.innerHTML = hasContent ? html : '<div class="summary-empty"><div class="summary-empty-icon">📋</div><p>Start filling out the form to see your selections here</p></div>';
   }
