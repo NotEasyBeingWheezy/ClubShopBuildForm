@@ -82,14 +82,14 @@
             items: ['men\'s', 'women\'s', 'junior'],
             colors: {
               options: [
-                { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy' },
-                { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
-                { value: 'red', label: 'Red', image: 'https://via.placeholder.com/400x500/FF4136/FFFFFF?text=Red' },
-                { value: 'green', label: 'Green', image: 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green' },
-                { value: 'yellow', label: 'Yellow', image: 'https://via.placeholder.com/400x500/FFDC00/000000?text=Yellow' },
-                { value: 'maroon', label: 'Maroon', image: 'https://via.placeholder.com/400x500/85144b/FFFFFF?text=Maroon' },
-                { value: 'royalBlue', label: 'Royal Blue', image: 'https://via.placeholder.com/400x500/0074D9/FFFFFF?text=Royal+Blue' },
-                { value: 'skyBlue', label: 'Sky Blue', image: 'https://via.placeholder.com/400x500/7FDBFF/000000?text=Sky+Blue' }
+                { value: 'navy', label: 'Navy' },
+                { value: 'black', label: 'Black' },
+                { value: 'red', label: 'Red' },
+                { value: 'green', label: 'Green' },
+                { value: 'yellow', label: 'Yellow' },
+                { value: 'maroon', label: 'Maroon' },
+                { value: 'royalBlue', label: 'Royal Blue' },
+                { value: 'skyBlue', label: 'Sky Blue' }
               ]
             }
           },
@@ -99,7 +99,7 @@
             items: ['men\'s', 'women\'s', 'junior'],
             colors: {
               options: [
-                { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy' },
+                { value: 'navy', label: 'Navy' },
                 { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
                 { value: 'red', label: 'Red', image: 'https://via.placeholder.com/400x500/FF4136/FFFFFF?text=Red' },
                 { value: 'green', label: 'Green', image: 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green' },
@@ -116,7 +116,7 @@
             items: ['men\'s', 'women\'s', 'junior'],
             colors: {
               options: [
-                { value: 'navy', label: 'Navy', image: 'https://via.placeholder.com/400x500/001f3f/FFFFFF?text=Navy' },
+                { value: 'navy', label: 'Navy' },
                 { value: 'black', label: 'Black', image: 'https://via.placeholder.com/400x500/111111/FFFFFF?text=Black' },
                 { value: 'red', label: 'Red', image: 'https://via.placeholder.com/400x500/FF4136/FFFFFF?text=Red' },
                 { value: 'green', label: 'Green', image: 'https://via.placeholder.com/400x500/2ECC40/FFFFFF?text=Green' },
@@ -720,9 +720,9 @@ CONFIG.personalFields.forEach(field => {
 formState['notes'] = '';
 
   // Helper function to capitalize each word
-  function capitalizeWords(str) {
-    return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-  }
+function capitalizeWords(str) {
+  return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
 
   // Render personal info fields
 function renderClubInfo() {
@@ -840,11 +840,8 @@ function renderPersonalInfo() {
   }).join('');
 }
 
-
-
-
-  // Render kit sections
-  function renderKitSections() {
+// Render kit sections
+function renderKitSections() {
     const container = document.getElementById('kit-sections');
     container.innerHTML = CONFIG.kitSections.map(section => `
       <div class="cricket-kit-section cricket-kit-section-border">
@@ -852,9 +849,9 @@ function renderPersonalInfo() {
         ${section.groups.map(group => renderGroup(section.id, group)).join('')}
       </div>
     `).join('');
-  }
+}
 
-  // Render notes section
+// Render notes section
 function renderNotesSection() {
   const container = document.getElementById('kit-sections');
   const notesHTML = `
@@ -870,7 +867,7 @@ function renderNotesSection() {
   container.insertAdjacentHTML('beforeend', notesHTML);
 }
 
-  function renderGroup(sectionId, group) {
+function renderGroup(sectionId, group) {
     const groupKey = `${sectionId}-${group.id}`;
     return `
       <div class="item-group">
@@ -883,9 +880,9 @@ function renderNotesSection() {
         </div>
       </div>
     `;
-  }
+}
 
-  function renderFileList(fieldId) {
+function renderFileList(fieldId) {
     const listContainer = document.getElementById(`${fieldId}-list`);
     const files = formState[fieldId] || [];
     
@@ -902,7 +899,7 @@ function renderNotesSection() {
         </button>
       </div>
     `).join('');
-  }
+}
 
 function renderItem(groupKey, item, group) {
   const itemKey = `${groupKey}-${item}`;
@@ -954,7 +951,7 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
   `;
 }
 
-  function renderAdditionalField(itemKey, field) {
+function renderAdditionalField(itemKey, field) {
     const combinationData = field.imagesWithMasuri ? JSON.stringify(field.imagesWithMasuri).replace(/"/g, '&quot;') : '';
     return `
       <label class="color-label">${field.label}</label>
@@ -963,10 +960,10 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
         ${field.options.map(opt => `<option value="${opt.value}" ${opt.image ? `data-image="${opt.image}"` : ''}>${opt.label}</option>`).join('')}
       </select>
     `;
-  }
+}
 
-  // Event delegation
-  function setupEventListeners() {
+// Event delegation
+function setupEventListeners() {
         document.addEventListener('click', e => {
       // Handle section toggle header clicks
       if (e.target.closest('.section-toggle-header')) {
@@ -1223,13 +1220,8 @@ if (e.target.matches('select.form-input')) {
     }
   }
 }
-
-
-
-
-
     });
-  }
+}
 
 function updateOrderSummary() {
   const container = document.getElementById('order-summary-content');
@@ -1278,28 +1270,69 @@ function updateOrderSummary() {
     html += `<div class="summary-section"><div class="summary-section-title">Personal Information</div>${personalInfo}</div>`;
   }
 
-  // Kit selections (rest remains the same)
+// Kit selections
   CONFIG.kitSections.forEach(section => {
-    // ... existing code
+    section.groups.forEach(group => {
+      const groupKey = `${section.id}-${group.id}`;
+      const selections = group.items.filter(item => {
+        const itemKey = `${groupKey}-${item}`;
+        const colorKey = itemKey; // Color is stored with same key
+        
+        // Check if this is a no-size-variation item (empty string)
+        const isNoSizeVariation = item === '';
+        
+        // For no-size-variation items, only check if color is selected
+        if (isNoSizeVariation) {
+          if (group.colors) {
+            return formState[colorKey] && formState[colorKey] !== '';
+          }
+          return false; // No color means nothing to show
+        }
+        
+        // For items with size variations, must be toggled on
+        const isToggled = formState[itemKey] === true;
+        
+        // If group has colors, must have a color selected
+        if (group.colors) {
+          return isToggled && formState[colorKey] && formState[colorKey] !== '';
+        }
+        
+        // If no colors, just needs to be toggled
+        return isToggled;
+      }).map(item => {
+        const itemKey = `${groupKey}-${item}`;
+        const color = formState[itemKey];
+        let colorLabel = '';
+        if (group.colors && color && typeof color === 'string') {
+          colorLabel = group.colors.options.find(o => o.value === color)?.label || '';
+        }
+        return `<div class="summary-item">✓ ${item.charAt(0).toUpperCase() + item.slice(1)} ${group.title}${colorLabel ? ` - <span class="summary-value">${colorLabel}</span>` : ''}</div>`;
+      }).join('');
+      
+      if (selections) {
+        hasContent = true;
+        html += `<div class="summary-section"><div class="summary-section-title">${group.title}</div>${selections}</div>`;
+      }
+    });
   });
 
   container.innerHTML = hasContent ? html : '<div class="summary-empty"><div class="summary-empty-icon">📋</div><p>Start filling out the form to see your selections here</p></div>';
 }
 
-  // Initialize
-  function init() {
+// Initialize
+function init() {
     renderClubInfo();
     renderPersonalInfo();
     renderKitSections();
     setupEventListeners();
     renderNotesSection();
-  }
+}
 
-  if (document.readyState === 'loading') {
+if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+} else {
+  init();
+}
 
   window.CricketKitForm = { getFormData: () => formState };
 })();
