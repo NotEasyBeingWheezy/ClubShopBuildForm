@@ -172,7 +172,7 @@
                 { value: 'navy-white', label: 'Navy/White', image: './assets/shirt-navy-yellow.jpg' },
                 { value: 'navy-skyblue', label: 'Navy/Sky Blue', image: './assets/shirt-navy-yellow.jpg' },
                 { value: 'navy-red', label: 'Navy/Red', image: './assets/shirt-navy-yellow.jpg' },
-                { value: 'gren-black', label: 'Green/Black', image: './assets/shirt-navy-yellow.jpg' },
+                { value: 'green-black', label: 'Green/Black', image: './assets/shirt-navy-yellow.jpg' },
                 { value: 'royalblue-navy', label: 'Royal Blue/Navy', image: './assets/shirt-navy-yellow.jpg' },
                 { value: 'red-blue', label: 'Red/Blue', image: './assets/shirt-navy-yellow.jpg' },
                 { value: 'green-yellow', label: 'Green/Yellow', image: './assets/shirt-navy-yellow.jpg' },
@@ -707,6 +707,288 @@ CONFIG.personalFields.forEach(field => {
 
 formState['notes'] = '';
 
+  // Debounce helper function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Save form state to localStorage
+  function saveDraft() {
+    try {
+      const draftData = {
+        formState: formState,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('cricketKitFormDraft', JSON.stringify(draftData));
+    } catch (error) {
+      console.error('Error saving draft:', error);
+    }
+  }
+
+  // Load form state from localStorage
+  function loadDraft() {
+    try {
+      const savedDraft = localStorage.getItem('cricketKitFormDraft');
+      if (savedDraft) {
+        const draftData = JSON.parse(savedDraft);
+        return draftData.formState;
+      }
+    } catch (error) {
+      console.error('Error loading draft:', error);
+    }
+    return null;
+  }
+
+  // Clear draft from localStorage
+  function clearDraft() {
+    try {
+      localStorage.removeItem('cricketKitFormDraft');
+    } catch (error) {
+      console.error('Error clearing draft:', error);
+    }
+  }
+
+  // Calculate form completion progress
+  function calculateProgress() {
+    let totalFields = 0;
+    let completedFields = 0;
+
+    // Club fields
+    CONFIG.clubFields.forEach(field => {
+      totalFields++;
+      if (field.type === 'file') {
+        if (Array.isArray(formState[field.id]) && formState[field.id].length > 0) {
+          completedFields++;
+        }
+      } else if (formState[field.id] && formState[field.id] !== '') {
+        completedFields++;
+      }
+    });
+
+    // Personal fields
+    CONFIG.personalFields.forEach(field => {
+      totalFields++;
+      if (formState[field.id] && formState[field.id] !== '') {
+        completedFields++;
+      }
+    });
+
+    // Kit selections (at least one item selected)
+    let hasKitSelection = false;
+    CONFIG.kitSections.forEach(section => {
+      section.groups.forEach(group => {
+        const groupKey = `${section.id}-${group.id}`;
+        group.items.forEach(item => {
+          const itemKey = `${groupKey}-${item}`;
+          if (item === '') {
+            // No-size-variation items
+            if (formState[itemKey] && formState[itemKey] !== '') {
+              hasKitSelection = true;
+            }
+          } else {
+            // Items with toggles
+            if (formState[itemKey + '-toggle'] === true) {
+              hasKitSelection = true;
+            }
+          }
+        });
+      });
+    });
+
+    totalFields++; // Count kit selections as one field
+    if (hasKitSelection) {
+      completedFields++;
+    }
+
+    return Math.round((completedFields / totalFields) * 100);
+  }
+
+  // Validate form
+  function validateForm() {
+    const errors = [];
+
+    // Validate club fields
+    CONFIG.clubFields.forEach(field => {
+      if (field.required) {
+        if (field.type === 'file') {
+          if (!Array.isArray(formState[field.id]) || formState[field.id].length === 0) {
+            errors.push(`${field.label} is required`);
+          }
+        } else if (!formState[field.id] || formState[field.id] === '') {
+          errors.push(`${field.label} is required`);
+        }
+      }
+    });
+
+    // Validate personal fields
+    CONFIG.personalFields.forEach(field => {
+      if (field.required) {
+        if (!formState[field.id] || formState[field.id] === '') {
+          errors.push(`${field.label} is required`);
+        }
+      }
+    });
+
+    // Validate email format
+    if (formState['email']) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formState['email'])) {
+        errors.push('Please enter a valid email address');
+      }
+    }
+
+    return errors;
+  }
+
+  // Clear entire form
+  function clearForm() {
+    if (!confirm('Are you sure you want to clear all form data? This action cannot be undone.')) {
+      return;
+    }
+
+    // Reset all form state
+    Object.keys(formState).forEach(key => {
+      if (Array.isArray(formState[key])) {
+        formState[key] = [];
+      } else {
+        formState[key] = '';
+      }
+    });
+
+    // Clear all inputs
+    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(input => {
+      input.value = '';
+    });
+
+    // Clear all selects
+    document.querySelectorAll('select').forEach(select => {
+      select.value = '';
+      const floatingInput = select.closest('.floating-input');
+      if (floatingInput) {
+        floatingInput.classList.remove('has-value');
+      }
+    });
+
+    // Uncheck all checkboxes
+    document.querySelectorAll('[data-section-toggle], [data-item-toggle]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    // Hide all sections and items
+    document.querySelectorAll('.section-content, .item-details').forEach(element => {
+      element.classList.remove('active');
+    });
+
+    // Clear file lists
+    document.querySelectorAll('.file-list').forEach(list => {
+      list.innerHTML = '';
+    });
+
+    // Clear draft from localStorage
+    clearDraft();
+
+    // Update summary and progress
+    updateOrderSummary();
+    updateProgress();
+
+    // Show success message
+    showNotification('Form cleared successfully', 'success');
+  }
+
+  // Submit form
+  function submitForm() {
+    // Validate form
+    const errors = validateForm();
+
+    if (errors.length > 0) {
+      // Show validation errors
+      const errorMessage = 'Please fix the following errors:\n\n' + errors.join('\n');
+      alert(errorMessage);
+
+      // Highlight first error field
+      const firstErrorField = errors[0].split(' is required')[0];
+      CONFIG.clubFields.concat(CONFIG.personalFields).forEach(field => {
+        if (field.label === firstErrorField) {
+          const element = document.getElementById(field.id);
+          if (element) {
+            element.focus();
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      });
+
+      return;
+    }
+
+    // Show success message
+    const formData = window.CricketKitForm.getFormData();
+    console.log('Form submitted successfully:', formData);
+
+    showNotification('Form submitted successfully! Check console for form data.', 'success');
+
+    // Clear draft after successful submission
+    clearDraft();
+
+    // In a real implementation, you would send formData to your server here
+    // Example:
+    // fetch('/api/orders', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(formData)
+    // });
+  }
+
+  // Show notification
+  function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.setAttribute('role', 'alert');
+    notification.setAttribute('aria-live', 'polite');
+
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 10);
+
+    // Remove after 5 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, 5000);
+  }
+
+  // Update progress indicator
+  function updateProgress() {
+    const progressBar = document.getElementById('form-progress-bar');
+    const progressText = document.getElementById('form-progress-text');
+
+    if (progressBar && progressText) {
+      const progress = calculateProgress();
+      progressBar.style.width = `${progress}%`;
+      progressBar.setAttribute('aria-valuenow', progress);
+      progressText.textContent = `${progress}% Complete`;
+    }
+  }
+
+  // Debounced save to localStorage
+  const debouncedSave = debounce(saveDraft, 1000);
+
+  // Debounced update for text inputs
+  const debouncedUpdateSummary = debounce(updateOrderSummary, 300);
+
   // Helper function to capitalize each word
 function capitalizeWords(str) {
   return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -724,19 +1006,23 @@ function renderClubInfo() {
         id: field.id,
         html: `
           <div class="floating-input">
-            <input 
-              type="file" 
-              id="${field.id}" 
+            <input
+              type="file"
+              id="${field.id}"
               class="form-input"
-              ${field.multiple ? 'multiple' : ''} 
+              ${field.multiple ? 'multiple' : ''}
               accept="${field.accept || '*/*'}"
               data-file-upload
               data-field="${field.id}"
               placeholder=" "
+              aria-describedby="${field.id}-hint"
             />
             <label for="${field.id}">
               ${field.label} ${field.required ? '<span class="required">*</span>' : ''}
             </label>
+            <div id="${field.id}-hint" class="file-upload-hint">
+              Accepted formats: ${field.accept || 'All files'} • Max size: 10MB per file
+            </div>
             <div id="${field.id}-list" class="file-list"></div>
           </div>
         `
@@ -847,8 +1133,33 @@ function renderNotesSection() {
       <h2 class="section-title">Additional Notes</h2>
       <div class="form-group">
         <label for="customer-notes" class="form-label">Please add any additional information or special requirements:</label>
-        <textarea id="customer-notes" class="form-input" data-field="notes" rows="5" 
+        <textarea id="customer-notes" class="form-input" data-field="notes" rows="5"
                   placeholder="Add any additional notes here..."></textarea>
+      </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="cricket-kit-section cricket-kit-section-border">
+      <div class="progress-container">
+        <div class="progress-header">
+          <h3 class="progress-title">Form Completion</h3>
+          <span id="form-progress-text" class="progress-text">0% Complete</span>
+        </div>
+        <div class="progress-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <div id="form-progress-bar" class="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="cricket-kit-section">
+      <div class="form-actions">
+        <button type="button" id="clear-form-btn" class="btn btn-secondary" aria-label="Clear all form data">
+          Clear Form
+        </button>
+        <button type="button" id="submit-form-btn" class="btn btn-primary" aria-label="Submit form">
+          Submit Order
+        </button>
       </div>
     </div>
   `;
@@ -995,7 +1306,47 @@ function setupEventListeners() {
     document.addEventListener('input', e => {
       if (e.target.matches('[data-field]') && !e.target.matches('[data-file-upload]')) {
         formState[e.target.dataset.field] = e.target.value;
-        updateOrderSummary();
+        debouncedUpdateSummary();
+        updateProgress();
+        debouncedSave();
+      }
+    });
+
+    // Submit and Clear button handlers
+    document.addEventListener('click', e => {
+      if (e.target.id === 'submit-form-btn' || e.target.closest('#submit-form-btn')) {
+        e.preventDefault();
+        submitForm();
+      }
+
+      if (e.target.id === 'clear-form-btn' || e.target.closest('#clear-form-btn')) {
+        e.preventDefault();
+        clearForm();
+      }
+    });
+
+    // Keyboard navigation support
+    document.addEventListener('keydown', e => {
+      // Allow Enter key to toggle section/item headers
+      if (e.key === 'Enter' && (e.target.closest('.section-toggle-header') || e.target.closest('.item-toggle-header'))) {
+        const header = e.target.closest('.section-toggle-header') || e.target.closest('.item-toggle-header');
+        const checkbox = header.querySelector('[data-section-toggle], [data-item-toggle]');
+        if (checkbox && e.target !== checkbox) {
+          e.preventDefault();
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+
+      // Allow Space key to toggle when focused on header
+      if (e.key === ' ' && (e.target.closest('.section-toggle-header') || e.target.closest('.item-toggle-header'))) {
+        const header = e.target.closest('.section-toggle-header') || e.target.closest('.item-toggle-header');
+        const checkbox = header.querySelector('[data-section-toggle], [data-item-toggle]');
+        if (checkbox && e.target !== checkbox) {
+          e.preventDefault();
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        }
       }
     });
 
@@ -1040,7 +1391,7 @@ function setupEventListeners() {
       if (e.target.matches('[data-section-toggle]')) {
         const section = document.querySelector(`[data-section="${e.target.dataset.sectionToggle}"]`);
         section.classList.toggle('active', e.target.checked);
-        
+
         // If parent is deselected, deselect all children
         if (!e.target.checked) {
           // Clear child toggles (items with size variations)
@@ -1051,20 +1402,20 @@ function setupEventListeners() {
               const item = document.querySelector(`[data-item="${toggle.dataset.itemToggle}"]`);
               item.classList.remove('active');
               formState[toggle.dataset.itemToggle + '-toggle'] = false;
-              
+
               // Clear color selections
               const selects = item.querySelectorAll('[data-color]');
               selects.forEach(sel => {
                 sel.value = '';
                 formState[sel.dataset.color] = '';
               });
-              
+
               // Hide images
               const images = item.querySelectorAll('[data-image]');
               images.forEach(img => img.classList.remove('active'));
             }
           });
-          
+
           // Also clear color selections for no-size-variation items (those without toggles)
           // These are in .item-section.active (always active) containers
           const noSizeItems = section.querySelectorAll('.item-section.active [data-color]');
@@ -1072,21 +1423,23 @@ function setupEventListeners() {
             sel.value = '';
             formState[sel.dataset.color] = '';
           });
-          
+
           // Hide images in no-size-variation items
           const noSizeImages = section.querySelectorAll('.item-section.active [data-image]');
           noSizeImages.forEach(img => img.classList.remove('active'));
         }
-        
+
         // Always update summary when toggling section (both on and off)
         updateOrderSummary();
+        updateProgress();
+        debouncedSave();
       }
       
 if (e.target.matches('[data-item-toggle]')) {
         const item = document.querySelector(`[data-item="${e.target.dataset.itemToggle}"]`);
         item.classList.toggle('active', e.target.checked);
         formState[e.target.dataset.itemToggle + '-toggle'] = e.target.checked;
-        
+
         if (!e.target.checked) {
           const selects = item.querySelectorAll('[data-color]');
           selects.forEach(sel => {
@@ -1097,31 +1450,51 @@ if (e.target.matches('[data-item-toggle]')) {
           images.forEach(img => img.classList.remove('active'));
         }
         updateOrderSummary();
+        updateProgress();
+        debouncedSave();
       }
       
       if (e.target.matches('[data-color]')) {
         const colorKey = e.target.dataset.color;
         const value = e.target.value;
         formState[colorKey] = value;
-        
+
+        // For no-size-variation items, auto-toggle parent section if color is selected
+        const itemDetails = e.target.closest('.item-details');
+        if (itemDetails && itemDetails.classList.contains('active')) {
+          const itemSection = itemDetails.closest('.item-section');
+          if (itemSection && itemSection.classList.contains('active')) {
+            // This is a no-size-variation item, check if parent section needs to be toggled
+            const sectionContent = itemDetails.closest('.section-content');
+            if (sectionContent && !sectionContent.classList.contains('active') && value) {
+              const sectionId = sectionContent.dataset.section;
+              const sectionToggle = document.querySelector(`[data-section-toggle="${sectionId}"]`);
+              if (sectionToggle && !sectionToggle.checked) {
+                sectionToggle.checked = true;
+                sectionContent.classList.add('active');
+              }
+            }
+          }
+        }
+
         // Check if this select replaces another image (like Masuri replacing shirt image)
         const replacesKey = e.target.dataset.replaces;
-        
+
         if (replacesKey) {
           // This is a replacement field (like Masuri) - update the main image container
           const imageContainer = document.querySelector(`[data-image="${replacesKey}"]`);
-          
+
           if (value && imageContainer) {
             // Check if this field has combination images
             const combinationsData = e.target.dataset.combinations;
             let imageUrl, label;
-            
+
             if (combinationsData) {
               try {
                 // Get the main shirt color
                 const mainSelect = document.querySelector(`[data-color="${replacesKey}"]`);
                 const mainColor = mainSelect ? mainSelect.value : '';
-                
+
                 // Parse combination images and get the right one
                 const combinations = JSON.parse(combinationsData);
                 if (combinations[mainColor] && combinations[mainColor][value]) {
@@ -1203,12 +1576,16 @@ if (e.target.matches('[data-item-toggle]')) {
           }
         }
         updateOrderSummary();
+        updateProgress();
+        debouncedSave();
       }
 
                 // Handle select changes
       if (e.target.matches('select[data-field]')) {
         formState[e.target.dataset.field] = e.target.value;
         updateOrderSummary();
+        updateProgress();
+        debouncedSave();
       }
 
 
@@ -1338,13 +1715,110 @@ function updateOrderSummary() {
   container.innerHTML = hasContent ? html : '<div class="summary-empty"><div class="summary-empty-icon">📋</div><p>Start filling out the form to see your selections here</p></div>';
 }
 
+// Restore form from localStorage
+function restoreFormState(savedState) {
+  if (!savedState) return;
+
+  // Restore text inputs, emails, tels, textareas
+  Object.keys(savedState).forEach(key => {
+    const value = savedState[key];
+
+    // Handle regular input fields
+    const input = document.getElementById(key) || document.querySelector(`[data-field="${key}"]`);
+    if (input && (input.type === 'text' || input.type === 'email' || input.type === 'tel' || input.tagName === 'TEXTAREA')) {
+      input.value = value || '';
+      formState[key] = value;
+    }
+
+    // Handle select fields
+    const select = document.getElementById(key);
+    if (select && select.tagName === 'SELECT') {
+      select.value = value || '';
+      formState[key] = value;
+      const floatingInput = select.closest('.floating-input');
+      if (floatingInput && value) {
+        floatingInput.classList.add('has-value');
+      }
+    }
+
+    // Handle toggles
+    if (key.includes('-toggle')) {
+      const toggleKey = key.replace('-toggle', '');
+      const toggle = document.querySelector(`[data-item-toggle="${toggleKey}"]`);
+      if (toggle) {
+        toggle.checked = value;
+        const item = document.querySelector(`[data-item="${toggleKey}"]`);
+        if (item) {
+          item.classList.toggle('active', value);
+        }
+        formState[key] = value;
+      }
+    }
+
+    // Handle section toggles
+    const sectionToggle = document.querySelector(`[data-section-toggle="${key}"]`);
+    if (sectionToggle) {
+      sectionToggle.checked = value;
+      const section = document.querySelector(`[data-section="${key}"]`);
+      if (section) {
+        section.classList.toggle('active', value);
+      }
+    }
+
+    // Handle color selections
+    const colorSelect = document.querySelector(`[data-color="${key}"]`);
+    if (colorSelect) {
+      colorSelect.value = value || '';
+      formState[key] = value;
+      // Trigger change to update images
+      if (value) {
+        colorSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+  });
+
+  updateOrderSummary();
+  updateProgress();
+}
+
 // Initialize
 function init() {
     renderClubInfo();
     renderPersonalInfo();
     renderKitSections();
-    setupEventListeners();
     renderNotesSection();
+    setupEventListeners();
+
+    // Load saved draft
+    const savedDraft = loadDraft();
+    if (savedDraft) {
+      // Show notification about loaded draft
+      setTimeout(() => {
+        if (confirm('A saved draft was found. Would you like to restore it?')) {
+          restoreFormState(savedDraft);
+          showNotification('Draft restored successfully', 'success');
+        } else {
+          clearDraft();
+        }
+      }, 500);
+    }
+
+    // Initial progress update
+    updateProgress();
+
+    // Add aria-live to summary
+    const summaryContent = document.getElementById('order-summary-content');
+    if (summaryContent) {
+      summaryContent.setAttribute('aria-live', 'polite');
+      summaryContent.setAttribute('aria-atomic', 'false');
+    }
+
+    // Add tabindex and role to toggle headers for keyboard accessibility
+    document.querySelectorAll('.section-toggle-header, .item-toggle-header').forEach(header => {
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('role', 'button');
+      header.setAttribute('aria-expanded', 'false');
+    });
 }
 
 if (document.readyState === 'loading') {
@@ -1353,5 +1827,10 @@ if (document.readyState === 'loading') {
   init();
 }
 
-  window.CricketKitForm = { getFormData: () => formState };
+  window.CricketKitForm = {
+    getFormData: () => formState,
+    saveDraft: saveDraft,
+    loadDraft: loadDraft,
+    clearDraft: clearDraft
+  };
 })();
