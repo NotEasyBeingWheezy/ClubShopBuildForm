@@ -1400,7 +1400,7 @@ function setupEventListeners() {
         formData.append('message', formattedOrder);
 
         // Add subject line
-        formData.append('_subject', `New Club Build Form Submission - ${formState.clubName || 'Club Order'}`);
+        formData.append('_subject', `New Club Build Form Submission - ${formState.clubName}`);
 
         // Add reply-to as customer email
         if (formState.email) {
