@@ -1154,18 +1154,6 @@ function renderNotesSection() {
         </div>
       </div>
     </div>
-
-    <!-- Form Actions -->
-    <div class="cricket-kit-section">
-      <div class="form-actions">
-        <button type="button" id="clear-form-btn" class="btn btn-secondary" aria-label="Clear all form data">
-          Clear Form
-        </button>
-        <button type="button" id="submit-form-btn" class="btn btn-primary" aria-label="Submit form">
-          Submit Order
-        </button>
-      </div>
-    </div>
   `;
   container.insertAdjacentHTML('beforeend', notesHTML);
 }
@@ -1313,19 +1301,6 @@ function setupEventListeners() {
         debouncedUpdateSummary();
         updateProgress();
         debouncedSave();
-      }
-    });
-
-    // Submit and Clear button handlers
-    document.addEventListener('click', e => {
-      if (e.target.id === 'submit-form-btn' || e.target.closest('#submit-form-btn')) {
-        e.preventDefault();
-        submitForm();
-      }
-
-      if (e.target.id === 'clear-form-btn' || e.target.closest('#clear-form-btn')) {
-        e.preventDefault();
-        clearForm();
       }
     });
 
