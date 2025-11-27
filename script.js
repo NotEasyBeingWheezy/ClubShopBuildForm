@@ -994,7 +994,7 @@ formState['notes'] = '';
     let emailBody = '';
 
     emailBody += '━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-    emailBody += 'NEW CRICKET KIT ORDER\n';
+    emailBody += 'NEW CLUB BUILD FORM SUBMISSION\n';
     emailBody += '━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
 
     // Club Information
@@ -1400,7 +1400,7 @@ function setupEventListeners() {
         formData.append('message', formattedOrder);
 
         // Add subject line
-        formData.append('_subject', `New Cricket Kit Order - ${formState.clubName || 'Club Order'}`);
+        formData.append('_subject', `New Club Build Form Submission - ${formState.clubName || 'Club Order'}`);
 
         // Add reply-to as customer email
         if (formState.email) {
