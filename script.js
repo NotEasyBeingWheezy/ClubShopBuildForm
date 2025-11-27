@@ -989,6 +989,127 @@ formState['notes'] = '';
   // Debounced update for text inputs
   const debouncedUpdateSummary = debounce(updateOrderSummary, 300);
 
+  // Format order data for email
+  function formatOrderForEmail() {
+    let emailBody = '';
+
+    emailBody += '━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    emailBody += 'NEW CRICKET KIT ORDER\n';
+    emailBody += '━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+    // Club Information
+    emailBody += 'CLUB INFORMATION\n';
+    CONFIG.clubFields.forEach(field => {
+      if (field.type !== 'file' && formState[field.id]) {
+        emailBody += `${field.label}: ${formState[field.id]}\n`;
+      }
+    });
+    emailBody += '\n';
+
+    // Customer Details
+    emailBody += 'CUSTOMER DETAILS\n';
+    CONFIG.personalFields.forEach(field => {
+      if (formState[field.id]) {
+        emailBody += `${field.label}: ${formState[field.id]}\n`;
+      }
+    });
+    emailBody += '\n';
+
+    // Kit Selections
+    emailBody += '━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    emailBody += 'KIT SELECTIONS\n';
+    emailBody += '━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+    CONFIG.kitSections.forEach(section => {
+      let sectionItems = [];
+
+      section.groups.forEach(group => {
+        const groupKey = `${section.id}-${group.id}`;
+
+        group.items.forEach(item => {
+          const itemKey = `${groupKey}-${item}`;
+          const isNoSize = item === '';
+
+          // Check if item is selected
+          let isSelected = false;
+          if (isNoSize) {
+            // No-size items: check if color is selected
+            isSelected = formState[itemKey] && formState[itemKey] !== '';
+          } else {
+            // Items with sizes: check toggle
+            isSelected = formState[itemKey + '-toggle'] === true;
+          }
+
+          if (isSelected) {
+            const itemLabel = isNoSize ? group.title : `${capitalizeWords(item)} ${group.title}`;
+            let colorInfo = '';
+
+            // Get color if available
+            if (group.colors && formState[itemKey]) {
+              const colorOption = group.colors.options.find(opt => opt.value === formState[itemKey]);
+              if (colorOption) {
+                colorInfo = ` (${colorOption.label})`;
+              }
+            }
+
+            // Check for additional fields (like Masuri)
+            if (group.additionalFields && group.additionalFields[item]) {
+              group.additionalFields[item].forEach(addField => {
+                const addFieldKey = `${itemKey}-${addField.id}`;
+                if (formState[addFieldKey]) {
+                  const addOption = addField.options.find(opt => opt.value === formState[addFieldKey]);
+                  if (addOption) {
+                    colorInfo += ` with ${addOption.label} ${capitalizeWords(addField.id)}`;
+                  }
+                }
+              });
+            }
+
+            sectionItems.push(`✓ ${itemLabel}${colorInfo}`);
+          }
+        });
+      });
+
+      if (sectionItems.length > 0) {
+        emailBody += section.title.toUpperCase() + '\n';
+        sectionItems.forEach(item => {
+          emailBody += item + '\n';
+        });
+        emailBody += '\n';
+      }
+    });
+
+    // Files
+    let hasFiles = false;
+    let filesText = '';
+    CONFIG.clubFields.forEach(field => {
+      if (field.type === 'file' && Array.isArray(formState[field.id]) && formState[field.id].length > 0) {
+        if (!hasFiles) {
+          filesText += 'FILES ATTACHED\n';
+          hasFiles = true;
+        }
+        filesText += `${field.label}:\n`;
+        formState[field.id].forEach(fileData => {
+          filesText += `  • ${fileData.name}\n`;
+        });
+      }
+    });
+
+    if (hasFiles) {
+      emailBody += filesText + '\n';
+    }
+
+    // Additional Notes
+    if (formState['notes'] && formState['notes'].trim() !== '') {
+      emailBody += 'ADDITIONAL NOTES\n';
+      emailBody += formState['notes'] + '\n\n';
+    }
+
+    emailBody += '━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+
+    return emailBody;
+  }
+
   // Helper function to capitalize each word
 function capitalizeWords(str) {
   return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -1255,7 +1376,91 @@ function renderAdditionalField(itemKey, field) {
 
 // Event delegation
 function setupEventListeners() {
-        document.addEventListener('click', e => {
+    // Handle form submission
+    const form = document.querySelector('form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Validate form first
+        const errors = validateForm();
+        if (errors.length > 0) {
+          const errorMessage = 'Please fix the following errors:\n\n' + errors.join('\n');
+          alert(errorMessage);
+          return;
+        }
+
+        // Format the order data
+        const formattedOrder = formatOrderForEmail();
+
+        // Build FormData
+        const formData = new FormData();
+
+        // Add formatted order as main message
+        formData.append('message', formattedOrder);
+
+        // Add subject line
+        formData.append('_subject', `New Cricket Kit Order - ${formState.clubName || 'Club Order'}`);
+
+        // Add reply-to as customer email
+        if (formState.email) {
+          formData.append('_replyto', formState.email);
+        }
+
+        // Add file attachments
+        CONFIG.clubFields.forEach(field => {
+          if (field.type === 'file' && Array.isArray(formState[field.id])) {
+            formState[field.id].forEach(fileData => {
+              if (fileData.file) {
+                formData.append(field.id, fileData.file);
+              }
+            });
+          }
+        });
+
+        // Disable submit button and show loading
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        // Submit to Formspree
+        fetch('https://formspree.io/f/mangyvbv', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            showNotification('Order submitted successfully! You will receive a confirmation email.', 'success');
+            clearDraft();
+            // Optionally clear the form
+            setTimeout(() => {
+              if (confirm('Would you like to clear the form for a new order?')) {
+                clearForm();
+              }
+            }, 1000);
+          } else {
+            return response.json().then(data => {
+              throw new Error(data.error || 'Submission failed');
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showNotification('Error submitting order. Please try again.', 'error');
+        })
+        .finally(() => {
+          // Re-enable submit button
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        });
+      });
+    }
+
+    document.addEventListener('click', e => {
       // Handle section toggle header clicks
       if (e.target.closest('.section-toggle-header')) {
         const header = e.target.closest('.section-toggle-header');
