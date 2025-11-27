@@ -707,6 +707,15 @@ CONFIG.personalFields.forEach(field => {
 
 formState['notes'] = '';
 
+  // Map salespeople to their Formspree endpoints
+  const SALESPERSON_ENDPOINTS = {
+    'James Kiening': 'https://formspree.io/f/YOUR_ENDPOINT_JAMES',
+    'Adam Gunn': 'https://formspree.io/f/YOUR_ENDPOINT_ADAM',
+    'Elliot Wright': 'https://formspree.io/f/YOUR_ENDPOINT_ELLIOT',
+    'Ben Louch': 'https://formspree.io/f/YOUR_ENDPOINT_BEN',
+    'Bob Bailey': 'https://formspree.io/f/YOUR_ENDPOINT_BOB'
+  };
+
   // Debounce helper function
   function debounce(func, wait) {
     let timeout;
@@ -1418,14 +1427,28 @@ function setupEventListeners() {
           }
         });
 
+        // Get the selected salesperson and their endpoint
+        const selectedSalesperson = formState.salesperson;
+        if (!selectedSalesperson || selectedSalesperson === '') {
+          alert('Please select a NX-Teamwear Salesperson before submitting.');
+          return;
+        }
+
+        const formspreeEndpoint = SALESPERSON_ENDPOINTS[selectedSalesperson];
+        if (!formspreeEndpoint) {
+          alert('Invalid salesperson selected. Please contact support.');
+          console.error('No endpoint found for salesperson:', selectedSalesperson);
+          return;
+        }
+
         // Disable submit button and show loading
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting...';
 
-        // Submit to Formspree
-        fetch('https://formspree.io/f/mangyvbv', {
+        // Submit to Formspree (endpoint based on selected salesperson)
+        fetch(formspreeEndpoint, {
           method: 'POST',
           body: formData,
           headers: {
