@@ -21,8 +21,8 @@
         { value: 'Bob Bailey', label: 'Bob Bailey' },
       ]
     },
-    { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
-    { id: 'sponsor-logo', label: 'Sponsor Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
+    { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: false, accept: 'image/*', multiple: true },
+    { id: 'sponsor-logo', label: 'Sponsor Logo(s)', type: 'file', required: false, accept: 'image/*', multiple: true },
     
   ],
   
@@ -1009,6 +1009,7 @@ function renderClubInfo() {
             <input
               type="file"
               id="${field.id}"
+              name="${field.id}"
               class="form-input"
               ${field.multiple ? 'multiple' : ''}
               accept="${field.accept || '*/*'}"
@@ -1035,8 +1036,9 @@ function renderClubInfo() {
         id: field.id,
         html: `
           <div class="floating-input">
-            <select 
-              id="${field.id}" 
+            <select
+              id="${field.id}"
+              name="${field.id}"
               class="form-input"
               ${field.required ? 'required' : ''}
               data-field="${field.id}"
@@ -1056,11 +1058,12 @@ function renderClubInfo() {
       id: field.id,
       html: `
         <div class="floating-input">
-          <input 
+          <input
             type="${field.type}"
             id="${field.id}"
+            name="${field.id}"
             class="form-input"
-            ${field.required ? 'required' : ''} 
+            ${field.required ? 'required' : ''}
             data-field="${field.id}"
             placeholder=" "
           />
@@ -1098,11 +1101,12 @@ function renderPersonalInfo() {
     // STANDARD INPUTS (all personal fields are text/email/tel inputs)
     return `
       <div class="floating-input">
-        <input 
+        <input
           type="${field.type}"
           id="${field.id}"
+          name="${field.id}"
           class="form-input"
-          ${field.required ? 'required' : ''} 
+          ${field.required ? 'required' : ''}
           data-field="${field.id}"
           placeholder=" "
         />
@@ -1133,7 +1137,7 @@ function renderNotesSection() {
       <h2 class="section-title">Additional Notes</h2>
       <div class="form-group">
         <label for="customer-notes" class="form-label">Please add any additional information or special requirements:</label>
-        <textarea id="customer-notes" class="form-input" data-field="notes" rows="5"
+        <textarea id="customer-notes" name="notes" class="form-input" data-field="notes" rows="5"
                   placeholder="Add any additional notes here..."></textarea>
       </div>
     </div>
@@ -1172,7 +1176,7 @@ function renderGroup(sectionId, group) {
       <div class="item-group">
         <div class="section-toggle-header" data-toggle="${groupKey}">
           <h3 class="section-toggle-title">${group.title}</h3>
-          <input type="checkbox" class="cricket-checkbox" data-section-toggle="${groupKey}">
+          <input type="checkbox" name="${groupKey}-toggle" class="cricket-checkbox" data-section-toggle="${groupKey}">
         </div>
         <div class="section-content" data-section="${groupKey}">
           ${group.items.map(item => renderItem(groupKey, item, group)).join('')}
@@ -1225,11 +1229,11 @@ function renderItem(groupKey, item, group) {
     <div class="item-section">
       <div class="item-toggle-header" data-toggle="${itemKey}">
         <label class="item-toggle-label">${itemLabel} ${group.title}</label>
-        <input type="checkbox" class="cricket-checkbox" data-item-toggle="${itemKey}">
+        <input type="checkbox" name="${itemKey}-toggle" class="cricket-checkbox" data-item-toggle="${itemKey}">
       </div>
       <div class="item-details" data-item="${itemKey}">
         ${group.colors ? renderColorSelect(itemKey, item, group.title, group.colors) : ''}
-        ${hasAdditionalFields ? 
+        ${hasAdditionalFields ?
           group.additionalFields[item].map(field => renderAdditionalField(itemKey, field)).join('') : ''}
         ${group.colors ? `<div class="item-image-container" data-image="${itemKey}" ${hasAdditionalFields ? `data-main-image="${itemKey}"` : ''}></div>` : ''}
       </div>
@@ -1242,7 +1246,7 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
   return `
     <div class="color-field-container">
       <label class="color-label">${itemLabel}${title} Colour</label>
-      <select class="color-select" data-color="${itemKey}">
+      <select class="color-select" name="${itemKey}" data-color="${itemKey}">
         <option value="">Select a colour option</option>
         ${colorConfig.options.map(opt => `<option value="${opt.value}" data-image="${opt.image}">${opt.label}</option>`).join('')}
       </select>
@@ -1254,7 +1258,7 @@ function renderAdditionalField(itemKey, field) {
     const combinationData = field.imagesWithMasuri ? JSON.stringify(field.imagesWithMasuri).replace(/"/g, '&quot;') : '';
     return `
       <label class="color-label">${field.label}</label>
-      <select class="color-select" data-color="${itemKey}-${field.id}" data-replaces="${itemKey}" ${combinationData ? `data-combinations='${combinationData}'` : ''}>
+      <select class="color-select" name="${itemKey}-${field.id}" data-color="${itemKey}-${field.id}" data-replaces="${itemKey}" ${combinationData ? `data-combinations='${combinationData}'` : ''}>
         <option value="">Select a ${field.id} colour</option>
         ${field.options.map(opt => `<option value="${opt.value}" ${opt.image ? `data-image="${opt.image}"` : ''}>${opt.label}</option>`).join('')}
       </select>
