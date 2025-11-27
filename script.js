@@ -16,9 +16,10 @@
         { value: '', label: '' },
         { value: 'James Kiening', label: 'James Kiening' },
         { value: 'Adam Gunn', label: 'Adam Gunn' },
+        { value: 'Mike Adamson', label: 'Mike Adamson' },
         { value: 'Elliot Wright', label: 'Elliot Wright' },
         { value: 'Ben Louch', label: 'Ben Louch' },
-        { value: 'Bob Bailey', label: 'Bob Bailey' },
+        { value: 'Bob Bailey', label: 'Bob Bailey' }
       ]
     },
     { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: false, accept: 'image/*', multiple: true },
