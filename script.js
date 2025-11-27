@@ -709,12 +709,13 @@ formState['notes'] = '';
 
   // Map salespeople to their Formspree endpoints
   const SALESPERSON_ENDPOINTS = {
-    'James Kiening': 'https://formspree.io/f/YOUR_ENDPOINT_JAMES',
-    'Adam Gunn': 'https://formspree.io/f/YOUR_ENDPOINT_ADAM',
-    'Elliot Wright': 'https://formspree.io/f/YOUR_ENDPOINT_ELLIOT',
-    'Ben Louch': 'https://formspree.io/f/YOUR_ENDPOINT_BEN',
-    'Bob Bailey': 'https://formspree.io/f/YOUR_ENDPOINT_BOB',
-    'Mike Adamson': 'https://formspree.io/f/mdkreglb'
+    'James Kiening': 'https://formspree.io/f/mdkreglb',
+    'Adam Gunn': 'https://formspree.io/f/mdkreglb',
+    'Mike Adamson': 'https://formspree.io/f/mdkreglb',
+    'Elliot Wright': 'https://formspree.io/f/mdkreglb',
+    'Ben Louch': 'https://formspree.io/f/mdkreglb',
+    'Bob Bailey': 'https://formspree.io/f/mdkreglb'
+    
   };
 
   // Debounce helper function
