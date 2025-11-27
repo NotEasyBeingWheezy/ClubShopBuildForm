@@ -21,8 +21,8 @@
         { value: 'Bob Bailey', label: 'Bob Bailey' },
       ]
     },
-    { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
-    { id: 'sponsor-logo', label: 'Sponsor Logo(s)', type: 'file', required: true, accept: 'image/*', multiple: true },
+    { id: 'club-logo', label: 'Club Logo(s)', type: 'file', required: false, accept: 'image/*', multiple: true },
+    { id: 'sponsor-logo', label: 'Sponsor Logo(s)', type: 'file', required: false, accept: 'image/*', multiple: true },
     
   ],
   
