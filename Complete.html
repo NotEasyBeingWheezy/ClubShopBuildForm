@@ -1108,41 +1108,6 @@ input[type="file"].form-input {
                 { value: 'white-black', label: 'White/Black', image: 'https://via.placeholder.com/400x500/FFFFFF/000000?text=White+Black' },
                 { value: 'blue-red', label: 'Blue/Red', image: 'https://via.placeholder.com/400x500/0074D9/FF4136?text=Blue+Red' }
               ]
-            },
-            additionalFields: {
-              'men\'s': [
-                {
-                  id: 'masuri',
-                  label: 'Masuri Colour',
-                  options: [
-                    { value: 'yellow', label: 'Yellow' },
-                    { value: 'navy', label: 'Navy' },
-                    { value: 'white', label: 'White' },
-                    { value: 'black', label: 'Black' }
-                  ],
-                  // Images for each shirt+masuri combination
-                  imagesWithMasuri: {
-                    'navy-yellow': {
-                      'yellow': './assets/shirt-navy-yellow-masuri-yellow.jpg',
-                      'navy': './assets/shirt-navy-yellow-masuri-navy.jpg',
-                      'white': './assets/shirt-navy-yellow-masuri-white.jpg',
-                      'black': './assets/shirt-navy-yellow-masuri-black.jpg'
-                    },
-                    'white-black': {
-                      'yellow': './assets/shirt-white-black-masuri-yellow.jpg',
-                      'navy': './assets/shirt-white-black-masuri-navy.jpg',
-                      'white': './assets/shirt-white-black-masuri-white.jpg',
-                      'black': './assets/shirt-white-black-masuri-black.jpg'
-                    },
-                    'blue-red': {
-                      'yellow': './assets/shirt-blue-red-masuri-yellow.jpg',
-                      'navy': './assets/shirt-blue-red-masuri-navy.jpg',
-                      'white': './assets/shirt-blue-red-masuri-white.jpg',
-                      'black': './assets/shirt-blue-red-masuri-black.jpg'
-                    }
-                  }
-                }
-              ]
             }
           },
           {
@@ -1988,19 +1953,6 @@ formState['notes'] = '';
               }
             }
 
-            // Check for additional fields (like Masuri)
-            if (group.additionalFields && group.additionalFields[item]) {
-              group.additionalFields[item].forEach(addField => {
-                const addFieldKey = `${itemKey}-${addField.id}`;
-                if (formState[addFieldKey]) {
-                  const addOption = addField.options.find(opt => opt.value === formState[addFieldKey]);
-                  if (addOption) {
-                    colorInfo += ` with ${addOption.label} ${capitalizeWords(addField.id)}`;
-                  }
-                }
-              });
-            }
-
             sectionItems.push(`✓ ${itemLabel}${colorInfo}`);
           }
         });
@@ -2252,11 +2204,10 @@ function renderFileList(fieldId) {
 function renderItem(groupKey, item, group) {
   const itemKey = `${groupKey}-${item}`;
   const itemLabel = item.charAt(0).toUpperCase() + item.slice(1);
-  const hasAdditionalFields = group.additionalFields && group.additionalFields[item];
-  
+
   // Check if item is empty string (no size variation)
   const isNoSizeVariation = item === '';
-  
+
   if (isNoSizeVariation) {
     // Render without toggle, just the color dropdown
     return `
@@ -2268,7 +2219,7 @@ function renderItem(groupKey, item, group) {
       </div>
     `;
   }
-  
+
   // Original render with toggle for items with size variations
   return `
     <div class="item-section">
@@ -2278,9 +2229,7 @@ function renderItem(groupKey, item, group) {
       </div>
       <div class="item-details" data-item="${itemKey}">
         ${group.colors ? renderColorSelect(itemKey, item, group.title, group.colors) : ''}
-        ${hasAdditionalFields ?
-          group.additionalFields[item].map(field => renderAdditionalField(itemKey, field)).join('') : ''}
-        ${group.colors ? `<div class="item-image-container" data-image="${itemKey}" ${hasAdditionalFields ? `data-main-image="${itemKey}"` : ''}></div>` : ''}
+        ${group.colors ? `<div class="item-image-container" data-image="${itemKey}"></div>` : ''}
       </div>
     </div>
   `;
@@ -2297,17 +2246,6 @@ function renderColorSelect(itemKey, item, title, colorConfig) {
       </select>
     </div>
   `;
-}
-
-function renderAdditionalField(itemKey, field) {
-    const combinationData = field.imagesWithMasuri ? JSON.stringify(field.imagesWithMasuri).replace(/"/g, '&quot;') : '';
-    return `
-      <label class="color-label">${field.label}</label>
-      <select class="color-select" name="${itemKey}-${field.id}" data-color="${itemKey}-${field.id}" data-replaces="${itemKey}" ${combinationData ? `data-combinations='${combinationData}'` : ''}>
-        <option value="">Select a ${field.id} colour</option>
-        ${field.options.map(opt => `<option value="${opt.value}" ${opt.image ? `data-image="${opt.image}"` : ''}>${opt.label}</option>`).join('')}
-      </select>
-    `;
 }
 
 // Event delegation
@@ -2611,102 +2549,25 @@ if (e.target.matches('[data-item-toggle]')) {
           }
         }
 
-        // Check if this select replaces another image (like Masuri replacing shirt image)
-        const replacesKey = e.target.dataset.replaces;
+        // Update image display
+        const imageContainer = document.querySelector(`[data-image="${colorKey}"]`);
+        if (imageContainer) {
+          if (value) {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            const imageUrl = selectedOption.dataset.image;
+            const label = selectedOption.text;
 
-        if (replacesKey) {
-          // This is a replacement field (like Masuri) - update the main image container
-          const imageContainer = document.querySelector(`[data-image="${replacesKey}"]`);
-
-          if (value && imageContainer) {
-            // Check if this field has combination images
-            const combinationsData = e.target.dataset.combinations;
-            let imageUrl, label;
-
-            if (combinationsData) {
-              try {
-                // Get the main shirt color
-                const mainSelect = document.querySelector(`[data-color="${replacesKey}"]`);
-                const mainColor = mainSelect ? mainSelect.value : '';
-
-                // Parse combination images and get the right one
-                const combinations = JSON.parse(combinationsData);
-                if (combinations[mainColor] && combinations[mainColor][value]) {
-                  imageUrl = combinations[mainColor][value];
-                  const selectedOption = e.target.options[e.target.selectedIndex];
-                  const mainOption = mainSelect ? mainSelect.options[mainSelect.selectedIndex] : null;
-                  label = mainOption && selectedOption ? `${mainOption.text} with ${selectedOption.text} Masuri` : selectedOption.text;
-                }
-              } catch (error) {
-                console.error('Error parsing combination images:', error);
-              }
-            }
-            
-            if (imageUrl) {
-              imageContainer.innerHTML = `
-                <div class="item-image-wrapper">
-                  <img src="${imageUrl}" alt="${label}" class="item-image">
-                  <div class="item-image-label">
-                    <p class="item-image-text">${label}</p>
-                  </div>
+            imageContainer.innerHTML = `
+              <div class="item-image-wrapper">
+                <img src="${imageUrl}" alt="${label}" class="item-image">
+                <div class="item-image-label">
+                  <p class="item-image-text">${label}</p>
                 </div>
-              `;
-              imageContainer.classList.add('active');
-            }
-          } else if (!value && imageContainer) {
-            // If replacement field is cleared, show the main shirt image if selected
-            const mainSelect = document.querySelector(`[data-color="${replacesKey}"]`);
-            if (mainSelect && mainSelect.value) {
-              const mainOption = mainSelect.options[mainSelect.selectedIndex];
-              const mainImageUrl = mainOption.dataset.image;
-              const mainLabel = mainOption.text;
-              
-              imageContainer.innerHTML = `
-                <div class="item-image-wrapper">
-                  <img src="${mainImageUrl}" alt="${mainLabel}" class="item-image">
-                  <div class="item-image-label">
-                    <p class="item-image-text">${mainLabel}</p>
-                  </div>
-                </div>
-              `;
-            } else {
-              imageContainer.classList.remove('active');
-            }
-          }
-        } else {
-          // This is a main color field - only update image if no replacement field has a value
-          const imageContainer = document.querySelector(`[data-image="${colorKey}"]`);
-          
-          if (imageContainer) {
-            // Check if there's a replacement field with a value
-            const parentItem = imageContainer.closest('[data-item]');
-            const replacementSelect = parentItem ? parentItem.querySelector(`[data-replaces="${colorKey}"]`) : null;
-            const hasReplacementValue = replacementSelect && replacementSelect.value;
-            
-            if (value) {
-              const selectedOption = e.target.options[e.target.selectedIndex];
-              const imageUrl = selectedOption.dataset.image;
-              const label = selectedOption.text;
-              
-              if (!hasReplacementValue) {
-                // No replacement value, show main image
-                imageContainer.innerHTML = `
-                  <div class="item-image-wrapper">
-                    <img src="${imageUrl}" alt="${label}" class="item-image">
-                    <div class="item-image-label">
-                      <p class="item-image-text">${label}</p>
-                    </div>
-                  </div>
-                `;
-                imageContainer.classList.add('active');
-              } else {
-                // Has replacement value, trigger it to update with new combination
-                const changeEvent = new Event('change', { bubbles: true });
-                replacementSelect.dispatchEvent(changeEvent);
-              }
-            } else if (!value) {
-              imageContainer.classList.remove('active');
-            }
+              </div>
+            `;
+            imageContainer.classList.add('active');
+          } else {
+            imageContainer.classList.remove('active');
           }
         }
         updateOrderSummary();
